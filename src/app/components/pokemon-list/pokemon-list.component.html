@@ -1,0 +1,15 @@
+<div class="grid">
+    <div class="card" *ngFor="let poke of pokemonList" (click)="selectPokemon(poke)">
+      <img [src]="poke.imageUrl" alt="{{ poke.name }}">
+      <h3>#{{ poke.number }} {{ poke.name }}</h3>
+    </div>
+  </div>
+  
+  <!-- Popup -->
+  <div class="popup" *ngIf="selectedPokemon">
+    <h2>{{ selectedPokemon.name }}</h2>
+    <p><strong>Type:</strong> {{ selectedPokemon.type }}</p>
+    <p>{{ selectedPokemon.description }}</p>
+    <button (click)="closePopup()">Close</button>
+  </div>
+  
