@@ -1,17 +1,22 @@
 <div class="grid">
     <div class="card" *ngFor="let poke of pokemonList" (click)="selectPokemon(poke)">
-      <img [src]="poke.imageUrl" alt="{{ poke.name }}">
-      <h3>#{{ poke.number }} {{ poke.name }}</h3>
+      <img [src]="'assets/images/' + poke.imageUrl" alt="{{ poke.name }}">
+      <p>#{{ poke.number }}</p>
+      <h3>{{ poke.name }}</h3>
+      <p>{{ poke.type }}</p>
     </div>
   </div>
   
-  <!-- Popup -->
-  <div class="popup" *ngIf="selectedPokemon">
+<!-- Overlay backdrop -->
+<div class="overlay" *ngIf="selectedPokemon" (click)="closePopup()">
+  <!-- Popup box -->
+  <div class="popup" (click)="$event.stopPropagation()">
     <h2>{{ selectedPokemon.name }}</h2>
     <p><strong>Type:</strong> {{ selectedPokemon.type }}</p>
     <p>{{ selectedPokemon.description }}</p>
     <button (click)="closePopup()">Close</button>
   </div>
+</div>
   
 
 

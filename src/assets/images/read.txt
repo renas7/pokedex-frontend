@@ -1,0 +1,11 @@
+here you can put all the sprites
+
+
+Update DB image URL:
+
+'imageUrl': 'assets/images/001-bulbasaur.png'
+
+
+Angular will serve from /assets/..., so in HTML:
+
+<img [src]="'assets/images/' + poke.imageUrl" />
