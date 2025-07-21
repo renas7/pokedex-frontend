@@ -49,3 +49,44 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
   z-index: 10;
 }
+
+.pokemon-card {
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin-bottom: 16px;
+  border-radius: 10px;
+  width: 200px;
+  text-align: center;
+}
+
+.type-badge {
+  color: white;
+  padding: 4px 10px;
+  margin-right: 6px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  display: inline-block;
+}
+
+.pokemon-image {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.version-buttons button {
+  margin: 4px;
+  padding: 4px 10px;
+  border: none;
+  background-color: #eee;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.version-buttons button.active {
+  background-color: #4CAF50;
+  color: white;
+}

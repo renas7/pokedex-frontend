@@ -1,4 +1,4 @@
-<div class="grid">
+<!-- <div class="grid">
     <div class="card" *ngFor="let poke of pokemonList" (click)="selectPokemon(poke)">
       <img [src]="'assets/images/' + poke.imageUrl" alt="{{ poke.name }}">
       <p>#{{ poke.number }}</p>
@@ -7,16 +7,16 @@
     </div>
   </div>
   
-<!-- Overlay backdrop -->
-<div class="overlay" *ngIf="selectedPokemon" (click)="closePopup()">
-  <!-- Popup box -->
+Overlay backdrop -->
+<!-- <div class="overlay" *ngIf="selectedPokemon" (click)="closePopup()">
+  Popup box 
   <div class="popup" (click)="$event.stopPropagation()">
     <h2>{{ selectedPokemon.name }}</h2>
     <p><strong>Type:</strong> {{ selectedPokemon.type }}</p>
     <p>{{ selectedPokemon.description }}</p>
     <button (click)="closePopup()">Close</button>
   </div>
-</div>
+</div> -->
   
 
 
@@ -30,3 +30,62 @@ node server.js
 ng serve
 
 -->
+
+<div class="grid">
+  <div *ngFor="let poke of pokemons" class="card" (click)="openPopup(poke)">
+    <img class="pokemon-image" [src]="'assets/images/' + poke.name + '.png'" [alt]="poke.name" />
+    <h2>{{ poke.name }}</h2>
+    <p>#{{ poke.number }}</p>
+    
+    <div class="types" *ngIf="poke.types">
+      <span 
+      *ngFor="let type of poke.types"
+      class="type-badge"
+      [ngStyle]="{ 'background-color': getTypeColor(type) }">
+      {{ type }}
+    </span>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay backdrop -->
+<!-- POPUP -->
+<div class="overlay" *ngIf="selectedPokemon" (click)="closePopup()">
+  <div class="popup" (click)="$event.stopPropagation()">
+    <h2>{{ selectedPokemon.name }}</h2>
+    <p><strong>Number:</strong> #{{ selectedPokemon.number }}</p>
+    
+    <div class="types">
+      <span
+        *ngFor="let type of selectedPokemon.types"
+        class="type-badge"
+        [ngStyle]="{ 'background-color': getTypeColor(type) }">
+        {{ type }}
+      </span>
+    </div>
+
+    <p><strong>Height:</strong> {{ selectedPokemon.height }} m</p>
+    <p><strong>Weight:</strong> {{ selectedPokemon.weight }} kg</p>
+    <p><strong>Species:</strong> {{ selectedPokemon.species }}</p>
+
+    <div *ngIf="selectedPokemon?.descriptions?.length">
+      <p><strong>Pokédex entry:</strong></p>
+      <div class="version-buttons">
+        <button
+          *ngFor="let desc of selectedPokemon.descriptions"
+          (click)="selectGameVersion(desc.game)"
+          [class.active]="desc.game === selectedGameVersion"
+        >
+          {{ desc.game }}
+        </button>
+      </div>
+
+      <!-- Selected description -->
+      <p *ngIf="getSelectedDescription() as selectedDesc">
+        <strong>Description:</strong> {{ selectedDesc.text }}
+      </p>
+    </div>
+
+    <button (click)="closePopup()">Close</button>
+  </div>
+</div>
