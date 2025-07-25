@@ -1,41 +1,17 @@
-<!-- <div class="grid">
-    <div class="card" *ngFor="let poke of pokemonList" (click)="selectPokemon(poke)">
-      <img [src]="'assets/images/' + poke.imageUrl" alt="{{ poke.name }}">
-      <p>#{{ poke.number }}</p>
-      <h3>{{ poke.name }}</h3>
-      <p>{{ poke.type }}</p>
-    </div>
-  </div>
-  
-Overlay backdrop -->
-<!-- <div class="overlay" *ngIf="selectedPokemon" (click)="closePopup()">
-  Popup box 
-  <div class="popup" (click)="$event.stopPropagation()">
-    <h2>{{ selectedPokemon.name }}</h2>
-    <p><strong>Type:</strong> {{ selectedPokemon.type }}</p>
-    <p>{{ selectedPokemon.description }}</p>
-    <button (click)="closePopup()">Close</button>
-  </div>
-</div> -->
-  
-
-
 <!-- 
-
 HOW TO START SERVER  
 /pokedex-backend      ← Node.js + Express API 
 node server.js
 
 /pokedex-frontend     ← Angular app 
 ng serve
-
 -->
 
 <div class="grid">
-  <div *ngFor="let poke of pokemons" class="card" (click)="openPopup(poke)">
+  <div *ngFor="let poke of pokemons" class="card" (click)="openPopup(poke)" [ngStyle]="{ 'border-color': getTypeColor(poke.types[0]) }">
+    <div class="poke-number">#{{ formatNumber(poke.number) }}</div>
     <img class="pokemon-image" [src]="'assets/images/' + poke.name + '.png'" [alt]="poke.name" />
-    <h2>{{ poke.name }}</h2>
-    <p>#{{ poke.number }}</p>
+    <h2 style="margin: 10px;">{{ poke.name }}</h2>
     
     <div class="types" *ngIf="poke.types">
       <span 
@@ -53,7 +29,7 @@ ng serve
 <div class="overlay" *ngIf="selectedPokemon" (click)="closePopup()">
   <div class="popup" (click)="$event.stopPropagation()">
     <h2>{{ selectedPokemon.name }}</h2>
-    <p><strong>Number:</strong> #{{ selectedPokemon.number }}</p>
+    <p><strong>Number:</strong> #{{ formatNumber(selectedPokemon.number) }}</p>
     
     <div class="types">
       <span

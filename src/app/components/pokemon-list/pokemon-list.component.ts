@@ -12,7 +12,7 @@ import { PokemonService } from '../../services/pokemon.service';
 })
 export class PokemonListComponent implements OnInit {
   pokemons: Pokemon[] = [];
-  selectedPokemon: Pokemon | null = null; // 👈 Add this line
+  selectedPokemon: Pokemon | null = null;
 
   constructor(private pokemonService: PokemonService) {}
 
@@ -37,13 +37,6 @@ export class PokemonListComponent implements OnInit {
     this.selectedGameVersion = null;
   }
 
-  getDescriptionForGame(game: string): string {
-    if (!this.selectedPokemon?.descriptions) return 'No description available';
-
-    const desc = this.selectedPokemon.descriptions.find(d => d.game === game);
-    return desc ? desc.text : 'No description available';
-  }
-
   selectedGameVersion: string | null = null;
 
   selectGameVersion(version: string): void {
@@ -56,6 +49,10 @@ export class PokemonListComponent implements OnInit {
     return this.selectedPokemon.descriptions.find(
       desc => desc.game === this.selectedGameVersion
     ) || null;
+  }
+
+  formatNumber(num: number): string {
+    return num.toString().padStart(4, '0');
   }
 
   getTypeColor(type: string): string {
