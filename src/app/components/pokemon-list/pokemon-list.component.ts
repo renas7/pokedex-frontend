@@ -2,19 +2,22 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Pokemon } from '../../models/pokemon.model';
 import { PokemonService } from '../../services/pokemon.service';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-pokemon-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './pokemon-list.component.html',
   styleUrls: ['./pokemon-list.component.css']
 })
+
+
 export class PokemonListComponent implements OnInit {
   pokemons: Pokemon[] = [];
   selectedPokemon: Pokemon | null = null;
 
-  constructor(private pokemonService: PokemonService) {}
+  constructor(private pokemonService: PokemonService, private router: Router) {}
 
   ngOnInit(): void {
     this.pokemonService.getAllPokemon().subscribe((data: Pokemon[]) => {
@@ -53,6 +56,10 @@ export class PokemonListComponent implements OnInit {
 
   formatNumber(num: number): string {
     return num.toString().padStart(4, '0');
+  }
+
+  goToDetail(id: number) {
+    this.router.navigate(['/pokemon', id]);
   }
 
   getTypeColor(type: string): string {

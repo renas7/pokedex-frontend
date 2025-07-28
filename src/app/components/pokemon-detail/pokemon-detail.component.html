@@ -1,0 +1,75 @@
+<div *ngIf="pokemon" class="pokemon-detail">
+
+  <h1>{{ pokemon.name }} #{{ formatNumber(pokemon.number) }}</h1>
+
+  <img [src]="'assets/images/' + pokemon.name + '.png'" [alt]="pokemon.name" />
+
+  <!-- Types -->
+  <p><strong>Types:</strong>
+    <span *ngFor="let type of pokemon.types">
+      {{ type }}
+    </span>
+  </p>
+
+  <!-- Egg Groups -->
+    <h3>Egg Groups</h3> <!--DELETE LATER-->
+
+    <div *ngIf="pokemon.egg_groups?.length">
+        <h3>Egg Groups</h3>
+        <p>{{ pokemon.egg_groups?.join(', ') }}</p>
+    </div>
+
+  <!-- Abilities -->
+    <h3>Abilities</h3> <!--DELETE LATER-->
+    <div *ngIf="pokemon.abilities?.length">
+    <h3>Abilities</h3>
+    <ul>
+      <li *ngFor="let ability of pokemon.abilities">
+        <strong>{{ ability.name }}</strong>
+        <span *ngIf="ability.is_hidden">(Hidden)</span>
+        <div>{{ ability.description }}</div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Evolutions -->
+<div *ngIf="pokemon.evolutions?.length">
+  <h3>Evolutions</h3>
+
+  <!-- Pre-evolutions -->
+  <div *ngIf="getPreEvolutions().length">
+    <p *ngFor="let evo of getPreEvolutions()">
+      Evolves from 
+      <a [routerLink]="['/pokemon', evo.from_pokemon_id]">
+        {{ evo.from_pokemon_name }}
+      </a>
+      <span *ngIf="evo.level"> starting at level {{ evo.level }}</span>.
+    </p>
+  </div>
+
+  <!-- Post-evolutions -->
+  <div *ngIf="getPostEvolutions().length">
+    <p *ngFor="let evo of getPostEvolutions()">
+      Evolves into 
+      <a [routerLink]="['/pokemon', evo.to_pokemon_id]">
+        {{ evo.to_pokemon_name }}
+      </a>
+      <span *ngIf="evo.level"> starting at level {{ evo.level }}</span>.
+    </p>
+  </div>
+</div>
+  <!-- Descriptions -->
+    <h3>Pokédex Entries</h3>
+
+  <div *ngIf="pokemon.descriptions?.length">
+    <h3>Pokédex Entries</h3>
+    <ul>
+      <li *ngFor="let desc of pokemon.descriptions">
+        <strong>{{ desc.game }}:</strong> {{ desc.text }}
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="back-button">
+  <button [routerLink]="['/']">← Back to Pokédex</button>
+</div>

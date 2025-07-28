@@ -61,6 +61,8 @@ ng serve
         <strong>Description:</strong> {{ selectedDesc.text }}
       </p>
     </div>
+    
+    <button (click)="goToDetail(selectedPokemon.id)">View Details</button>
 
     <button (click)="closePopup()">Close</button>
   </div>
