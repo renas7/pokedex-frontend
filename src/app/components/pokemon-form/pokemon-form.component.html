@@ -1,0 +1,31 @@
+<h2>Add New Pokémon</h2>
+<form (ngSubmit)="submitForm()" #pokeForm="ngForm">
+
+  <label>Name:</label>
+  <input name="name" [(ngModel)]="pokemon.name" required />
+
+  <label>Number:</label>
+  <input type="number" name="number" [(ngModel)]="pokemon.number" required />
+
+  <label>Height (m):</label>
+  <input type="number" name="height" [(ngModel)]="pokemon.height" step="0.01" />
+
+  <label>Weight (kg):</label>
+  <input type="number" name="weight" [(ngModel)]="pokemon.weight" step="0.1" />
+
+  <label>Types:</label>
+  <select multiple [(ngModel)]="pokemon.types" name="types">
+    <option *ngFor="let type of availableTypes" [value]="type.id">{{ type.name }}</option>
+  </select>
+
+  <label>Abilities:</label>
+  <input [(ngModel)]="pokemon.abilities" name="abilities" placeholder="Comma-separated" />
+
+  <label>Base Experience:</label>
+  <input type="number" name="base_experience" [(ngModel)]="pokemon.base_experience" />
+
+  <label>Capture Rate:</label>
+  <input type="number" name="capture_rate" [(ngModel)]="pokemon.capture_rate" />
+
+  <button type="submit">Save</button>
+</form>

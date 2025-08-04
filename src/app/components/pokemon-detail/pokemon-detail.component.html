@@ -37,7 +37,7 @@
   <h3>Evolutions</h3>
 
   <!-- Pre-evolutions -->
-  <div *ngIf="getPreEvolutions().length">
+  <!-- <div *ngIf="getPreEvolutions().length">
     <p *ngFor="let evo of getPreEvolutions()">
       Evolves from 
       <a [routerLink]="['/pokemon', evo.from_pokemon_id]">
@@ -45,10 +45,10 @@
       </a>
       <span *ngIf="evo.level"> starting at level {{ evo.level }}</span>.
     </p>
-  </div>
+  </div> -->
 
   <!-- Post-evolutions -->
-  <div *ngIf="getPostEvolutions().length">
+  <!-- <div *ngIf="getPostEvolutions().length">
     <p *ngFor="let evo of getPostEvolutions()">
       Evolves into 
       <a [routerLink]="['/pokemon', evo.to_pokemon_id]">
@@ -57,7 +57,15 @@
       <span *ngIf="evo.level"> starting at level {{ evo.level }}</span>.
     </p>
   </div>
-</div>
+</div> -->
+
+  <div *ngIf="pokemon.evolutions?.length">
+    <h3>Evolutions</h3>
+    <!-- <p>{{ generateEvolutionText() }}</p> -->
+    <p [innerHTML]="generateEvolutionText()"></p>
+  </div>
+
+
   <!-- Descriptions -->
     <h3>Pokédex Entries</h3>
 

@@ -10,7 +10,7 @@ ng serve
 <div class="grid">
   <div *ngFor="let poke of pokemons" class="card" (click)="openPopup(poke)" [ngStyle]="{ 'border-color': getTypeColor(poke.types[0]) }">
     <div class="poke-number">#{{ formatNumber(poke.number) }}</div>
-    <img class="pokemon-image" [src]="'assets/images/' + poke.name + '.png'" [alt]="poke.name" />
+    <img class="pokemon-image" [src]="'assets/images/' + formatNumber(poke.number) + '-' + poke.name + '.png'" [alt]="poke.name" />
     <h2 style="margin: 10px;">{{ poke.name }}</h2>
     
     <div class="types" *ngIf="poke.types">
