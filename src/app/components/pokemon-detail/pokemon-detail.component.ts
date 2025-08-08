@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PokemonService } from '../../services/pokemon.service';
 import { Pokemon } from '../../models/pokemon.model';
@@ -17,12 +17,18 @@ export class PokemonDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private pokemonService: PokemonService
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const id = Number(params.get('id'));
+      if (!Number.isFinite(id) || id <= 0) {
+        // bad url like /pokemon/NaN → go home (or show 404)
+        this.router.navigate(['/']);
+        return;
+      }
       this.pokemonService.getPokemonById(id).subscribe(poke => {
         this.pokemon = poke;
       });
