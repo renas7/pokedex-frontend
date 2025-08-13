@@ -12,21 +12,18 @@
   </p>
 
   <!-- Egg Groups -->
-    <h3>Egg Groups</h3> <!--DELETE LATER-->
-
     <div *ngIf="pokemon.egg_groups?.length">
         <h3>Egg Groups</h3>
         <p>{{ pokemon.egg_groups?.join(', ') }}</p>
     </div>
 
   <!-- Abilities -->
-    <h3>Abilities</h3> <!--DELETE LATER-->
     <div *ngIf="pokemon.abilities?.length">
     <h3>Abilities</h3>
     <ul>
       <li *ngFor="let ability of pokemon.abilities">
         <strong>{{ ability.name }}</strong>
-        <span *ngIf="ability.is_hidden">(Hidden)</span>
+        <span *ngIf="ability.is_hidden"> (Hidden)</span>
         <div>{{ ability.description }}</div>
       </li>
     </ul>

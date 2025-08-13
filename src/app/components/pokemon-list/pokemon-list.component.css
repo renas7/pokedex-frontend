@@ -12,7 +12,7 @@
   padding: 10px;
   width: 160px;
   text-align: center;
-  background-color: #f7f7f7;
+  background-color: #f3f3f3;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   cursor: pointer;
   transition: border-color 0.2s ease, transform 0.4s ease;
@@ -44,7 +44,8 @@
 }
 
 .popup {
-  background: white;
+  border: 5px solid #ccc;
+  /* background: white; */
   padding: 2rem;
   border-radius: 12px;
   max-width: 500px;
@@ -69,8 +70,8 @@
 }
 
 .pokemon-image {
-  width: 120px;
-  height: 120px;
+  width: 96px;
+  height: 96px;
   object-fit: contain;
   margin-bottom: 8px;
 }
@@ -88,4 +89,48 @@
 .version-buttons button.active {
   background-color: #4CAF50;
   color: white;
+}
+
+.abilities {
+  margin-top: 6px;
+}
+
+.ability-badge {
+  display: inline-block;
+  background: #efefef;
+  border: 1px solid #ddd;
+  padding: 2px 8px;
+  margin: 2px 4px 0 0;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.more-abilities {
+  font-size: 0.78rem;
+  color: #666;
+}
+
+.label {
+  position: relative;
+  border: 3px solid #ccc;
+  border-radius: 12px;
+  padding: 16px; /* add some space so the label doesn't overlap content */
+  background: #fff; /* match your card background */
+  margin: 10px 0px;
+}
+
+.label::before {
+  content: attr(data-title);           /* <-- dynamic text here */
+  position: absolute;
+  top: -10px;
+  left: 12px;
+  background: #fff;                    /* hide the border under the label */
+  padding: 0 6px;
+  font-weight: 600;
+}
+
+.sprite {
+  display: flex;
+  align-items: centers;
 }
