@@ -64,7 +64,7 @@ export class PokemonListComponent implements OnInit {
 
   getTypeColor(type: string): string {
     const colors: { [key: string]: string } = {
-      Grass: '#78C850',
+      Grass: '#78c850ff',
       Poison: '#A040A0',
       Fire: '#F08030',
       Water: '#6890F0',

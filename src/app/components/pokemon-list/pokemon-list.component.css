@@ -45,13 +45,14 @@
 
 .popup {
   border: 5px solid #ccc;
-  /* background: white; */
-  padding: 2rem;
+  background: white;
+  padding: 2rem 1rem 1rem 1rem;
   border-radius: 12px;
   max-width: 500px;
   width: 90%;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
   z-index: 10;
+  position: relative;
 }
 
 .type-badge {
@@ -132,5 +133,44 @@
 
 .sprite {
   display: flex;
-  align-items: centers;
+  align-items: center;
+}
+
+.data {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.hiddenAb {
+  font-size: smaller;
+  padding-top: 3px;
+}
+
+.MoreDet {
+  color: #eee;
+  font-weight: bold;
+  margin: 4px;
+  padding: 4px 10px;
+  border: none;
+  background-color: #eee;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  color: red;
+  transition: 0.5s;
 }
