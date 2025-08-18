@@ -2,8 +2,11 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
   gap: 1.5rem;
   padding: 2rem;
+  max-width: 1200px;
 }
 
 .card {
@@ -15,10 +18,20 @@
   background-color: #f3f3f3;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.4s ease;
+  /* transition: border-color 0.2s ease, transform 0.4s ease; */
+  transition: background-color 0.25s ease, border-color 0.2s ease, transform 0.4s linear;
+  background-color: #fff; /* or whatever your default is */
 }
 
-.card:hover {
+/* .card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+  /* background-color: var(--hoverBg, rgba(0,0,0,0.06)); fallback if missing 
+
+}*/
+.card:hover,
+.card:focus-visible {
+  background-color: var(--hoverBg, rgba(0,0,0,0.06)); /* fallback if missing */
   transform: scale(1.05);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
@@ -49,7 +62,7 @@
   padding: 2rem 1rem 1rem 1rem;
   border-radius: 12px;
   max-width: 500px;
-  width: 90%;
+  /* width: 90%; */
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
   z-index: 10;
   position: relative;
@@ -113,11 +126,12 @@
 }
 
 .label {
+  --label-color: #ccc; /* fallback */
   position: relative;
   border: 3px solid #ccc;
   border-radius: 12px;
-  padding: 16px; /* add some space so the label doesn't overlap content */
-  background: #fff; /* match your card background */
+  padding: 16px;           /* add some space so the label doesn't overlap content */
+  background: #fff;     /* match your card background */
   margin: 10px 0px;
 }
 
@@ -129,6 +143,10 @@
   background: #fff;                    /* hide the border under the label */
   padding: 0 6px;
   font-weight: 600;
+  border-radius: 3px;
+  border: 2px solid var(--label-color);
+  /* background-color: var(--label-color); */
+  /* color: #ffffff; */
 }
 
 .sprite {
@@ -168,9 +186,23 @@
   font-size: 1.5rem;
   cursor: pointer;
   line-height: 1;
+  color: #000;                  /* default */
+  transition: color 1s;  /* apply transition here */
 }
 
 .close-btn:hover {
   color: red;
   transition: 0.5s;
+}
+
+.solidBG {
+  /* border: 5px solid #ccc; */
+  background: white;
+  /* padding: 2rem 1rem 1rem 1rem; */
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  position: relative;
 }

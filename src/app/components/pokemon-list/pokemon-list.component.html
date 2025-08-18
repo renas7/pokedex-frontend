@@ -8,7 +8,11 @@ ng serve
 -->
 
 <div class="grid">
-  <div *ngFor="let poke of pokemons" class="card" (click)="openPopup(poke)" [ngStyle]="{ 'border-color': getTypeColor(poke.types[0]) }">
+  <div *ngFor="let poke of pokemons" 
+  class="card" 
+  (click)="openPopup(poke)" 
+  [style.borderColor]="getTypeColor(poke.types[0])"
+  [style.--hoverBg]="getBgTypeColor(poke.types[0])">
     <div class="poke-number">#{{ formatNumber(poke.number) }}</div>
     <img class="pokemon-image" [src]="'assets/images/' + formatNumber(poke.number) + '-' + poke.name + '.png'" [alt]="poke.name" />
     <h2 style="margin: 10px;">{{ poke.name }}</h2>
@@ -27,81 +31,98 @@ ng serve
 <!-- Overlay backdrop -->
 <!-- POPUP -->
 <div class="overlay" *ngIf="selectedPokemon" (click)="closePopup()">
-  <div class="popup" (click)="$event.stopPropagation()" [ngStyle]="{ 'border-color': getTypeColor(selectedPokemon.types[0]) } ">
-    <button class="close-btn" (click)="closePopup()">✖</button>
-    <div class="label sprite" [attr.data-title]="'#' + ('0000' + selectedPokemon.number).slice(-4)" [ngStyle]="{ 'border-color': getTypeColor(selectedPokemon.types[0]) }">
-      <!-- <p class="label"> #{{ formatNumber(selectedPokemon.number) }}</p> -->
-      <img class="pokemon-image" [src]="'assets/images/sprites/' + selectedPokemon.number + '.png'" [alt]="selectedPokemon.name" />
-      <h2>{{ selectedPokemon.name }}</h2>
+  <div class="solidBG">
+    <div class="popup" (click)="$event.stopPropagation()" [ngStyle]="{ 'border-color': getTypeColor(selectedPokemon.types[0]), 'background-color': getBgTypeColor(selectedPokemon.types[0]) } ">
+      <button class="close-btn" (click)="closePopup()">✖</button>
+      <div class="label sprite" 
+      [attr.data-title]="'#' + ('0000' + selectedPokemon.number).slice(-4)" 
+      [ngStyle]="{ 'border-color': getTypeColor(selectedPokemon.types[0]) }"
+      [style.--label-color]="getTypeColor(selectedPokemon.types[0])">
+        <!-- <p class="label"> #{{ formatNumber(selectedPokemon.number) }}</p> -->
+        <img class="pokemon-image" [src]="'assets/images/sprites/' + selectedPokemon.number + '.png'" [alt]="selectedPokemon.name" />
+        <h2>{{ selectedPokemon.name }}</h2>
 
-    </div>
-    
-    <div class="types label data" [attr.data-title]="'Types'" [ngStyle]="{ 'border-color': getTypeColor(selectedPokemon.types[0]) }">
-      <span
-        *ngFor="let type of selectedPokemon.types"
-        class="type-badge"
-        [ngStyle]="{ 'background-color': getTypeColor(type) }">
-        {{ type }}
-      </span>
-    </div>
-    <div class="label data" [attr.data-title]="'Data'" [ngStyle]="{ 'border-color': getTypeColor(selectedPokemon.types[0]) }">
-      <div>
-        <p><strong>Height:</strong> {{ selectedPokemon.height }} m</p>
-        <p><strong>Weight:</strong> {{ selectedPokemon.weight }} kg</p>
       </div>
-      <div>
-        <p><strong>Species:</strong> {{ selectedPokemon.species }}</p>
-        <p><strong>Catch rate:</strong> {{ selectedPokemon.capture_rate }}</p>
+      
+      <div class="types label data" 
+      [attr.data-title]="'Types'" 
+      [ngStyle]="{ 'border-color': getTypeColor(selectedPokemon.types[0]) }"
+      [style.--label-color]="getTypeColor(selectedPokemon.types[0])">
+        <span
+          *ngFor="let type of selectedPokemon.types"
+          class="type-badge"
+          [ngStyle]="{ 'background-color': getTypeColor(type) }">
+          {{ type }}
+        </span>
       </div>
 
-
-    </div>
- 
-    <div class="label data" [attr.data-title]="'Abilities'" [ngStyle]="{ 'border-color': getTypeColor(selectedPokemon.types[0]) }">
-      <!-- Normal Abilities -->
-      <div class="abilities"*ngIf="selectedPokemon.abilities?.length">
-        <ng-container *ngFor="let ab of selectedPokemon.abilities">
-          <span class="ability-badge0" *ngIf="!ab.is_hidden" [title]="ab.description">
-            {{ ab.name }}
-          </span>
-        </ng-container>
+      <div class="label data" 
+      [attr.data-title]="'Data'" 
+      [ngStyle]="{ 'border-color': getTypeColor(selectedPokemon.types[0]) }"
+      [style.--label-color]="getTypeColor(selectedPokemon.types[0])">
+        <div>
+          <p><strong>Height:</strong> {{ selectedPokemon.height }} m</p>
+          <p><strong>Weight:</strong> {{ selectedPokemon.weight }} kg</p>
+        </div>
+        <div>
+          <p><strong>Species:</strong> {{ selectedPokemon.species }}</p>
+          <p><strong>Catch rate:</strong> {{ selectedPokemon.capture_rate }}</p>
+        </div>
       </div>
   
-      <!-- Hidden Abilities -->
-      <div class="abilities" *ngIf="selectedPokemon.abilities?.length">
-        <ng-container *ngFor="let ab of selectedPokemon.abilities">
-          <span class="ability-badge0" *ngIf="ab.is_hidden" [title]="ab.description">
-            {{ ab.name }}
-          </span>
-        </ng-container>
-        <div class="hiddenAb">Hidden Abilitiy</div>
+      <div class="label data" 
+      [attr.data-title]="'Abilities'" 
+      [ngStyle]="{ 'border-color': getTypeColor(selectedPokemon.types[0]) }"
+      [style.--label-color]="getTypeColor(selectedPokemon.types[0])">
+        <!-- Normal Abilities -->
+        <div class="abilities"*ngIf="selectedPokemon.abilities?.length">
+          <ng-container *ngFor="let ab of selectedPokemon.abilities">
+            <span class="ability-badge0" *ngIf="!ab.is_hidden" [title]="ab.description">
+              {{ ab.name }}
+            </span>
+          </ng-container>
+        </div>
+    
+        <!-- Hidden Abilities -->
+        <div class="abilities" *ngIf="selectedPokemon.abilities?.length">
+          <ng-container *ngFor="let ab of selectedPokemon.abilities">
+            <span class="ability-badge0" *ngIf="ab.is_hidden" [title]="ab.description">
+              {{ ab.name }}
+            </span>
+          </ng-container>
+          <div class="hiddenAb">Hidden Abilitiy</div>
+        </div>
+
       </div>
 
-    </div>
+      
 
-    
+      <div class="label" 
+      [attr.data-title]="'Pokédex entry'" 
+      *ngIf="selectedPokemon?.descriptions?.length" 
+      [ngStyle]="{ 'border-color': getTypeColor(selectedPokemon.types[0]) }"
+      [style.--label-color]="getTypeColor(selectedPokemon.types[0])">
+        <div class="version-buttons">
+          <!-- [ngStyle]="{ 'background-color': getTypeColor(selectedPokemon.types[0])}" -->
+          <button 
+            *ngFor="let desc of selectedPokemon.descriptions"
+            (click)="selectGameVersion(desc.game)"
+            [class.active]="desc.game === selectedGameVersion"
+          >
+            {{ desc.game }}
+          </button>
+        </div>
 
-    <div class="label" [attr.data-title]="'Pokédex entry'" *ngIf="selectedPokemon?.descriptions?.length" [ngStyle]="{ 'border-color': getTypeColor(selectedPokemon.types[0]) }">
-      <div class="version-buttons">
-        <!-- [ngStyle]="{ 'background-color': getTypeColor(selectedPokemon.types[0])}" -->
-        <button 
-          *ngFor="let desc of selectedPokemon.descriptions"
-          (click)="selectGameVersion(desc.game)"
-          [class.active]="desc.game === selectedGameVersion"
-        >
-          {{ desc.game }}
-        </button>
+        <!-- Selected description -->
+        <p *ngIf="getSelectedDescription() as selectedDesc">
+          {{ selectedDesc.text }}
+        </p>
       </div>
+      
+      <button class="MoreDet" [ngStyle]="{ 'background-color': getTypeColor(selectedPokemon.types[0]) }" (click)="goToDetail(selectedPokemon.id)">More Details</button>
+      <!-- <button (click)="closePopup()">Close</button> -->
 
-      <!-- Selected description -->
-      <p *ngIf="getSelectedDescription() as selectedDesc">
-        {{ selectedDesc.text }}
-      </p>
+
     </div>
-    
-    <button class="MoreDet" [ngStyle]="{ 'background-color': getTypeColor(selectedPokemon.types[0]) }" (click)="goToDetail(selectedPokemon.id)">More Details</button>
-    <!-- <button (click)="closePopup()">Close</button> -->
-
-
   </div>
 </div>

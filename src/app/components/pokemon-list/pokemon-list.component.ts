@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Pokemon } from '../../models/pokemon.model';
 import { PokemonService } from '../../services/pokemon.service';
@@ -13,7 +13,7 @@ import { Router, RouterModule } from '@angular/router';
 })
 
 
-export class PokemonListComponent implements OnInit {
+export class PokemonListComponent implements OnInit, OnDestroy {
   pokemons: Pokemon[] = [];
   selectedPokemon: Pokemon | null = null;
 
@@ -40,6 +40,24 @@ export class PokemonListComponent implements OnInit {
     this.selectedGameVersion = null;
   }
 
+  @HostListener('window:keydown', ['$event'])
+  onKeydown(e: KeyboardEvent) {
+    if (!this.selectedPokemon) return;            // only if popup is open
+    if (e.key === 'Escape' || e.key === 'Esc') {  // old browsers use 'Esc'
+      // Optional guard: ignore ESC inside inputs/textareas
+      const t = e.target as HTMLElement | null;
+      const tag = t?.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || t?.isContentEditable) return;
+
+      e.preventDefault();
+      this.closePopup();
+    }
+  }
+
+  ngOnDestroy(): void {
+    // nothing to clean up when using HostListener
+  }
+  
   selectedGameVersion: string | null = null;
 
   selectGameVersion(version: string): void {
@@ -84,5 +102,29 @@ export class PokemonListComponent implements OnInit {
       Steel: '#B8B8D0'
     };
     return colors[type] || '#A8A878';
+  }
+
+    getBgTypeColor(type: string): string {
+    const colors: { [key: string]: string } = {
+      Grass: '#78c85080',
+      Poison: '#a040a080',
+      Fire: '#F0803080',
+      Water: '#6890F080',
+      Flying: '#A890F080',
+      Bug: '#A8B82080',
+      Normal: '#A8A87880',
+      Electric: '#F8D03080',
+      Ground: '#E0C06880',
+      Fairy: '#EE99AC80',
+      Fighting: '#C0302880',
+      Psychic: '#F8588880',
+      Rock: '#B8A03880',
+      Ghost: '#70589880',
+      Ice: '#98D8D880',
+      Dragon: '#7038F880',
+      Dark: '#70584880',
+      Steel: '#B8B8D080'
+    };
+    return colors[type] || '#A8A87880';
   }
 }

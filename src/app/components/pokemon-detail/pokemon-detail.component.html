@@ -1,80 +1,71 @@
-<div *ngIf="pokemon" class="pokemon-detail">
+<div *ngIf="pokemon" class="pokemon-detail" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
 
-  <h1>{{ pokemon.name }} #{{ formatNumber(pokemon.number) }}</h1>
+  <!-- Header -->
+  <div class="pd-header">
+    <button class="pd-back" [routerLink]="['/']" aria-label="Back to Pokédex">← Back</button>
+    <h1 class="pd-title">
+      <span class="pd-name">{{ pokemon.name }}</span>
+      <span class="pd-number">#{{ formatNumber(pokemon.number) }}</span>
+    </h1>
+  </div>
 
-  <img [src]="'assets/images/' + pokemon.name + '.png'" [alt]="pokemon.name" />
-
-  <!-- Types -->
-  <p><strong>Types:</strong>
-    <span *ngFor="let type of pokemon.types">
-      {{ type }}
-    </span>
-  </p>
-
-  <!-- Egg Groups -->
-    <div *ngIf="pokemon.egg_groups?.length">
-        <h3>Egg Groups</h3>
-        <p>{{ pokemon.egg_groups?.join(', ') }}</p>
+  <!-- Top layout: Art + Meta -->
+  <div class="pd-top">
+    <div class="pd-art">
+      <img [src]="'assets/images/' + formatNumber(pokemon.number) + '-' + pokemon.name + '.png'"
+           [alt]="pokemon.name + ' artwork'"
+           loading="lazy" decoding="async">
     </div>
 
-  <!-- Abilities -->
-    <div *ngIf="pokemon.abilities?.length">
-    <h3>Abilities</h3>
-    <ul>
-      <li *ngFor="let ability of pokemon.abilities">
-        <strong>{{ ability.name }}</strong>
-        <span *ngIf="ability.is_hidden"> (Hidden)</span>
-        <div>{{ ability.description }}</div>
-      </li>
-    </ul>
+    <div class="pd-meta">
+      <!-- Types -->
+      <div class="pd-block">
+        <h3 class="pd-block-title">Types</h3>
+        <ul class="pd-type-list">
+        <li *ngFor="let type of pokemon.types"
+            class="pd-type-badge"
+            [style.backgroundColor]="getTypeColor(type)">
+          {{ type }}
+        </li>
+        </ul>
+      </div>
+
+      <!-- Egg Groups -->
+      <div class="pd-block" *ngIf="pokemon.egg_groups?.length">
+        <h3 class="pd-block-title">Egg Groups</h3>
+        <p class="pd-text">{{ pokemon.egg_groups?.join(', ') }}</p>
+      </div>
+
+      <!-- Abilities -->
+      <div class="pd-block" *ngIf="pokemon.abilities?.length">
+        <h3 class="pd-block-title">Abilities</h3>
+        <ul class="pd-ability-list">
+          <li *ngFor="let ability of pokemon.abilities" class="pd-ability-item">
+            <div class="pd-ability-header">
+              <strong class="pd-ability-name">{{ ability.name }}</strong>
+              <span *ngIf="ability.is_hidden" class="pd-hidden-tag" title="Hidden Ability">Hidden</span>
+            </div>
+            <p class="pd-ability-desc">{{ ability.description }}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 
   <!-- Evolutions -->
-<div *ngIf="pokemon.evolutions?.length">
-  <h3>Evolutions</h3>
-
-  <!-- Pre-evolutions -->
-  <!-- <div *ngIf="getPreEvolutions().length">
-    <p *ngFor="let evo of getPreEvolutions()">
-      Evolves from 
-      <a [routerLink]="['/pokemon', evo.from_pokemon_id]">
-        {{ evo.from_pokemon_name }}
-      </a>
-      <span *ngIf="evo.level"> starting at level {{ evo.level }}</span>.
-    </p>
-  </div> -->
-
-  <!-- Post-evolutions -->
-  <!-- <div *ngIf="getPostEvolutions().length">
-    <p *ngFor="let evo of getPostEvolutions()">
-      Evolves into 
-      <a [routerLink]="['/pokemon', evo.to_pokemon_id]">
-        {{ evo.to_pokemon_name }}
-      </a>
-      <span *ngIf="evo.level"> starting at level {{ evo.level }}</span>.
-    </p>
-  </div>
-</div> -->
-
-  <div *ngIf="pokemon.evolutions?.length">
-    <h3>Evolutions</h3>
-    <!-- <p>{{ generateEvolutionText() }}</p> -->
-    <p [innerHTML]="generateEvolutionText()"></p>
+  <div class="pd-block" *ngIf="pokemon.evolutions?.length">
+    <h3 class="pd-block-title">Evolutions</h3>
+    <p class="pd-evo-text" [innerHTML]="generateEvolutionText()"></p>
   </div>
 
-
-  <!-- Descriptions -->
-    <h3>Pokédex Entries</h3>
-
-  <div *ngIf="pokemon.descriptions?.length">
-    <h3>Pokédex Entries</h3>
-    <ul>
-      <li *ngFor="let desc of pokemon.descriptions">
-        <strong>{{ desc.game }}:</strong> {{ desc.text }}
+  <!-- Pokédex Entries -->
+  <div class="pd-block" *ngIf="pokemon.descriptions?.length">
+    <h3 class="pd-block-title">Pokédex Entries</h3>
+    <ul class="pd-dex-list">
+      <li *ngFor="let d of pokemon.descriptions" class="pd-dex-item">
+        <span class="pd-game">{{ d.game }}:</span>
+        <span class="pd-dex-text">{{ d.text }}</span>
       </li>
     </ul>
   </div>
-</div>
-<div class="back-button">
-  <button [routerLink]="['/']">← Back to Pokédex</button>
 </div>

@@ -15,6 +15,28 @@ import { Pokemon } from '../../models/pokemon.model';
 export class PokemonDetailComponent implements OnInit {
   pokemon: Pokemon | null = null;
 
+  // === ADD: type color map ===
+  private typeColor: Record<string, string> = {
+    Normal:  '#A8A77A',
+    Fire:    '#EE8130',
+    Water:   '#6390F0',
+    Electric:'#F7D02C',
+    Grass:   '#7AC74C',
+    Ice:     '#96D9D6',
+    Fighting:'#C22E28',
+    Poison:  '#A33EA1',
+    Ground:  '#E2BF65',
+    Flying:  '#A98FF3',
+    Psychic: '#F95587',
+    Bug:     '#A6B91A',
+    Rock:    '#B6A136',
+    Ghost:   '#735797',
+    Dragon:  '#6F35FC',
+    Dark:    '#705746',
+    Steel:   '#B7B7CE',
+    Fairy:   '#D685AD'
+  };
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -25,7 +47,6 @@ export class PokemonDetailComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       const id = Number(params.get('id'));
       if (!Number.isFinite(id) || id <= 0) {
-        // bad url like /pokemon/NaN → go home (or show 404)
         this.router.navigate(['/']);
         return;
       }
@@ -35,8 +56,15 @@ export class PokemonDetailComponent implements OnInit {
     });
   }
 
-  formatNumber(num: number): string {
-    return num.toString().padStart(4, '0');
+  // === CHANGE: safer padding ===
+  formatNumber(num: number | null | undefined): string {
+    if (num === null || num === undefined) return '';
+    return String(num).padStart(4, '0');
+  }
+
+  // === ADD: helper used by template for badge color ===
+  getTypeColor(type: string): string {
+    return this.typeColor[type] || '#999';
   }
 
   getPreEvolutions() {
@@ -48,7 +76,7 @@ export class PokemonDetailComponent implements OnInit {
   }
 
   generateEvolutionText(): string {
-    if (!this.pokemon?.evolutions) return '';
+    if (!this.pokemon?.evolutions?.length) return '';
 
     const evolutions = this.pokemon.evolutions;
     const currentId = this.pokemon.id;
@@ -71,7 +99,7 @@ export class PokemonDetailComponent implements OnInit {
       }
 
       if (!pre) {
-        let chainParts: string[] = [];
+        const chainParts: string[] = [];
         let current = currentId;
 
         while (true) {
@@ -93,23 +121,51 @@ export class PokemonDetailComponent implements OnInit {
       }
     }
 
+    // ✅ Correct: find the root of THIS chain (walk backwards from current/pre)
     if (!post.length && pre) {
-      const allToIds = evolutions.map(e => e.to_pokemon_id);
-      const root = evolutions.find(e => !allToIds.includes(e.from_pokemon_id));
-      const rootName = root ? root.from_pokemon_name : pre.from_pokemon_name;
-      const rootLink = `<a href="/pokemon/${root?.from_pokemon_id}">${rootName}</a>`;
+      let rootId = pre.from_pokemon_id;
+      let rootName = pre.from_pokemon_name;
 
-      text += `. It is the final form of ${rootLink}`;
+      // keep stepping back: X <- Y <- Z ... until no parent
+      let step = evolutions.find(e => e.to_pokemon_id === rootId);
+      while (step) {
+        rootId = step.from_pokemon_id;
+        rootName = step.from_pokemon_name;
+        step = evolutions.find(e => e.to_pokemon_id === rootId);
+      }
+
+      text += `. It is the final form of <a href="/pokemon/${rootId}">${rootName}</a>`;
     }
 
     if (!pre && !post.length) {
       text = `${this.pokemon.name} does not evolve.`;
     }
 
-    return text + '.';
+    return text.endsWith('.') ? text : text + '.';
   }
 
-
-
+  getBgTypeColor(type: string): string {
+    const colors: { [key: string]: string } = {
+      Grass: '#78c85080',
+      Poison: '#a040a080',
+      Fire: '#F0803080',
+      Water: '#6890F080',
+      Flying: '#A890F080',
+      Bug: '#A8B82080',
+      Normal: '#A8A87880',
+      Electric: '#F8D03080',
+      Ground: '#E0C06880',
+      Fairy: '#EE99AC80',
+      Fighting: '#C0302880',
+      Psychic: '#F8588880',
+      Rock: '#B8A03880',
+      Ghost: '#70589880',
+      Ice: '#98D8D880',
+      Dragon: '#7038F880',
+      Dark: '#70584880',
+      Steel: '#B8B8D080'
+    };
+    return colors[type] || '#A8A87880';
+  }
 
 }
