@@ -169,3 +169,125 @@
 
 /* Generic text */
 /* .pd-text { color: #d1d5db; margin: 0; } */
+
+/* Forms */
+.forms-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.form-chip {
+  border: 1px solid #334155;
+  background: #0b1220;
+  color: #cbd5e1;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+.form-chip:hover { border-color: #22d3ee; }
+.form-chip.active {
+  background: #111827;
+  border-color: #22d3ee;
+  color: #e5e7eb;
+}
+
+/* Stats */
+.stats-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.stat-row {
+  display: grid;
+  grid-template-columns: 90px 40px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+.stat-row.total { margin-top: 6px; font-weight: 800; }
+.stat-name { color: #93c5fd; font-weight: 700; }
+.stat-value { color: #e5e7eb; text-align: right; }
+.stat-bar {
+  height: 10px;
+  background: #0b1220;
+  border: 1px solid #253046;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.stat-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #22d3ee, #818cf8);
+  transition: width .4s ease;
+}
+
+/* Type effectiveness grid */
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 10px;
+}
+.type-cell {
+  border: 1px solid #1f2937;
+  background: #0b1220;
+  border-radius: 14px;
+  padding: 8px;
+  text-align: center;
+}
+.type-pill {
+  display: inline-block;
+  color: #0b0f1a;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.2);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+  text-transform: capitalize;
+}
+.type-mult { display: block; margin-top: 6px; color: #e5e7eb; }
+
+/* color cue by multiplier */
+.type-cell.m4 { box-shadow: 0 0 0 2px #fca5a5 inset; }   /* strong red ring */
+.type-cell.m2 { box-shadow: 0 0 0 2px #fdba74 inset; }   /* orange ring */
+.type-cell.m1 { box-shadow: 0 0 0 2px #6ee7b7 inset; }   /* green ring */
+.type-cell.mh { box-shadow: 0 0 0 2px #93c5fd inset; }   /* blue ring */
+.type-cell.mq { box-shadow: 0 0 0 2px #a78bfa inset; }   /* purple ring */
+.type-cell.m0 { box-shadow: 0 0 0 2px #f9a8d4 inset; }   /* pink ring */
+
+.type-legend { margin-top: 8px; display: flex; gap: 10px; flex-wrap: wrap; }
+.type-legend .lg { padding: 2px 8px; border-radius: 999px; border: 1px solid #253046; }
+.type-legend .m4 { background: #451a1a; color: #fecaca; }
+.type-legend .m2 { background: #422006; color: #fed7aa; }
+.type-legend .m1 { background: #052e1b; color: #bbf7d0; }
+.type-legend .mh { background: #0a1f3a; color: #bfdbfe; }
+.type-legend .mq { background: #231942; color: #ddd6fe; }
+.type-legend .m0 { background: #3b0a2a; color: #fbcfe8; }
+
+
+.gender-row { display: grid; gap: 8px; }
+
+.gender-bar {
+  height: 14px;
+  border-radius: 999px;
+  border: 1px solid #253046;
+  background: #0b1220;        /* track */
+  overflow: hidden;
+  display: flex;
+}
+.seg { height: 100%; }
+.seg.male { background: #60a5fa; }       /* blue */
+.seg.female { background: #f472b6; }     /* pink */
+.seg.genderless { background: #94a3b8; } /* gray */
+
+.gender-values {
+  display: flex;
+  gap: 12px;
+  font-size: 14px;
+  color: #e5e7eb;
+}
+.gender-values .male { color: #93c5fd; }
+.gender-values .female { color: #f9a8d4; }
+.gender-values .genderless { color: #cbd5e1; }
+

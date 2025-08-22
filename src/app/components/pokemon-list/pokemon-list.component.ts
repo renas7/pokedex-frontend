@@ -104,7 +104,7 @@ export class PokemonListComponent implements OnInit, OnDestroy {
     return colors[type] || '#A8A878';
   }
 
-    getBgTypeColor(type: string): string {
+  getBgTypeColor(type: string): string {
     const colors: { [key: string]: string } = {
       Grass: '#78c85080',
       Poison: '#a040a080',
