@@ -1,5 +1,6 @@
-<div *ngIf="pokemon" class="pokemon-detail" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
-
+<div *ngIf="pokemon" class="pokemon-detail">
+<!-- <div *ngIf="pokemon" class="pokemon-detail" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
+ -->
   <!-- Header -->
   <div class="pd-header">
     <button class="pd-back" [routerLink]="['/']" aria-label="Back to Pokédex">← Back</button>
@@ -11,33 +12,96 @@
 
   <!-- Top layout: Art + Meta -->
   <div class="pd-top">
-    <div class="pd-art">
-      <img [src]="getArtPath()"
-          [alt]="pokemon.name + ' artwork'"
-          loading="lazy" decoding="async">
-    </div>
+    <div class="pd-left" [ngStyle]="{ 'background-color': getTypeColor(pokemon.types[0]) } ">
+      <div class="pd-art">
+        <img [src]="getArtPath()"
+        [alt]="pokemon.name + ' artwork'"
+        loading="lazy" decoding="async">
+      </div>
 
-    <div class="pd-meta">
       <!-- Types -->
-      <div class="pd-block">
-        <h3 class="pd-block-title">Types</h3>
-        <ul class="pd-type-list">
-        <li *ngFor="let type of pokemon.types"
-            class="pd-type-badge"
-            [style.backgroundColor]="getTypeColor(type)">
-          {{ type }}
-        </li>
-        </ul>
+      <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
+        <div class="pd-center">
+          <h3 class="pd-block-title">Types</h3>
+        </div>
+        <div>
+          <ul class="pd-type-list pd-wbg pd-center">
+            <li *ngFor="let type of pokemon.types"
+                class="pd-type-badge"
+                [style.backgroundColor]="getTypeColor(type)">
+              {{ type }}
+            </li>
+          </ul>
+        </div>
       </div>
 
       <!-- Egg Groups -->
-      <div class="pd-block" *ngIf="pokemon.egg_groups?.length">
-        <h3 class="pd-block-title">Egg Groups</h3>
-        <p class="pd-text">{{ pokemon.egg_groups?.join(', ') }}</p>
+      <div class="pd-block" *ngIf="pokemon.egg_groups?.length" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
+        <p>Breeding</p>
+        <div>
+          <h3 class="pd-block-title">Egg Groups</h3>
+          <p class="pd-text">{{ pokemon.egg_groups?.join(', ') }}</p>
+        </div>
+        <div>
+          <h3 class="pd-block-title">Hatch time</h3>
+          <p class="pd-text"> {{ pokemon.hatch_time }} </p>
+        </div>
+        <div>
+        </div>
       </div>
 
+      <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
+        <div>
+          <h3 class="pd-block-title">Height</h3>
+          <p class="pd-text">{{ pokemon.height }} m</p>
+        </div>
+        <div>
+          <h3 class="pd-block-title">Weight</h3>
+          <p class="pd-text"> {{ pokemon.weight }} kg</p>
+        </div>
+      </div>
+
+      <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
+        <p class="pd-text">Base Experience: {{ pokemon.base_experience }}</p>
+        <p class="pd-text">Base Friendship: {{ pokemon.base_friendship }}</p>
+      </div>
+      <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
+        <p class="pd-text">Catch rate: {{ pokemon.capture_rate }}</p>
+        <p class="pd-text">Generation: {{ pokemon.generation }}</p>
+      </div>
+      <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
+        <p class="pd-text">Species: {{ pokemon.species }}</p>
+      </div>
+
+      <div class="pd-block" *ngIf="pokemon" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
+        <h3 class="pd-block-title">Gender Ratio</h3>
+
+        <div class="gender-row" [class.genderless]="gender.genderless">
+          <div class="gender-bar" role="img" [attr.aria-label]="genderAriaLabel()">
+            <!-- two segments when gendered -->
+            <div *ngIf="!gender.genderless" class="seg male"   [style.width.%]="gender.male"></div>
+            <div *ngIf="!gender.genderless" class="seg female" [style.width.%]="gender.female"></div>
+
+            <!-- single segment when genderless -->
+            <div *ngIf="gender.genderless" class="seg genderless" style="width:100%"></div>
+          </div>
+
+          <div class="gender-values" *ngIf="!gender.genderless">
+            <span class="male">{{ gender.male | number:'1.0-1' }}% male</span>
+            <span class="female">{{ gender.female | number:'1.0-1' }}% female</span>
+          </div>
+          <div class="gender-values" *ngIf="gender.genderless">
+            <span class="genderless">Genderless</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!--Right side-->
+    <div class="pd-meta">
       <!-- Abilities -->
-      <div class="pd-block" *ngIf="pokemon.abilities?.length">
+      <div class="pd-block" *ngIf="pokemon.abilities?.length" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
         <h3 class="pd-block-title">Abilities</h3>
         <ul class="pd-ability-list">
           <li *ngFor="let ability of pokemon.abilities" class="pd-ability-item">
@@ -51,7 +115,7 @@
       </div>
 
       <!-- Forms -->
-      <div class="pd-block" *ngIf="pokemon.forms?.length">
+      <div class="pd-block" *ngIf="pokemon.forms?.length" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
         <h3 class="pd-block-title">Forms</h3>
         <div class="forms-list">
           <button class="form-chip"
@@ -69,65 +133,8 @@
         </div>
       </div>
 
-      <div class="pd-block" >
-        <h3 class="pd-block-title">Data</h3>
-        <p class="pd-text">Height: {{ pokemon.height }}m</p>
-        <p class="pd-text">Weight: {{ pokemon.weight }}kg</p>
-        <p class="pd-text">Catch rate: {{ pokemon.capture_rate }}</p>
-        <p class="pd-text">Species: {{ pokemon.species }}</p>
-        <p class="pd-text">Generation: {{ pokemon.generation }}</p>
-        <p class="pd-text">Base Experience: {{ pokemon.base_experience }}</p>
-        <p class="pd-text">Hatch time: {{ pokemon.hatch_time }}</p>
-        <p class="pd-text">Base Friendship: {{ pokemon.base_friendship }}</p>
-        <p class="pd-text">Male: {{ pokemon.gender_male }}</p>
-        <p class="pd-text">Female: {{ pokemon.gender_female }}</p>
-
-
-        <div class="pd-block" *ngIf="pokemon">
-          <h3 class="pd-block-title">Gender Ratio</h3>
-
-          <div class="gender-row" [class.genderless]="gender.genderless">
-            <div class="gender-bar" role="img" [attr.aria-label]="genderAriaLabel()">
-              <!-- two segments when gendered -->
-              <div *ngIf="!gender.genderless" class="seg male"   [style.width.%]="gender.male"></div>
-              <div *ngIf="!gender.genderless" class="seg female" [style.width.%]="gender.female"></div>
-
-              <!-- single segment when genderless -->
-              <div *ngIf="gender.genderless" class="seg genderless" style="width:100%"></div>
-            </div>
-
-            <div class="gender-values" *ngIf="!gender.genderless">
-              <span class="male">{{ gender.male | number:'1.0-1' }}% male</span>
-              <span class="female">{{ gender.female | number:'1.0-1' }}% female</span>
-            </div>
-            <div class="gender-values" *ngIf="gender.genderless">
-              <span class="genderless">Genderless</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Stats -->
-      <!-- <div class="pd-block" *ngIf="pokemon.stats">
-        <h3 class="pd-block-title">Base Stats</h3>
-        <ul class="stats-list">
-          <li class="stat-row" *ngFor="let s of statOrder">
-            <span class="stat-name">{{ s }}</span>
-            <span class="stat-value">{{ getStatValue(s) }}</span>
-            <div class="stat-bar">
-              <div class="stat-fill" [style.width.%]="statPercent(getStatValue(s))"></div>
-            </div>
-          </li>
-          <li class="stat-row total">
-            <span class="stat-name">Total</span>
-            <span class="stat-value">{{ statTotal() }}</span>
-          </li>
-        </ul>
-      </div> -->
-
       <!-- Stats NEW -->
-      <div class="pd-block" *ngIf="statsMap">
+      <div class="pd-block" *ngIf="statsMap" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
         <h3 class="pd-block-title">Base Stats</h3>
         <ul class="stats-list">
           <li class="stat-row" *ngFor="let s of statOrder">
@@ -145,14 +152,14 @@
       </div>
 
       <!-- Optional: friendly fallback if no stats present in data -->
-      <div class="pd-block" *ngIf="!statsMap">
+      <div class="pd-block" *ngIf="!statsMap" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
         <h3 class="pd-block-title">Base Stats</h3>
         <p class="pd-text">No stats available for this Pokémon.</p>
       </div>
 
 
       <!-- Defense -->
-      <div class="pd-block" *ngIf="defenseMultipliers">
+      <div class="pd-block" *ngIf="defenseMultipliers" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
         <h3 class="pd-block-title">Type Effectiveness (Defense)</h3>
         <div class="type-grid">
           <div *ngFor="let t of typeList"
@@ -182,13 +189,13 @@
   </div>
 
   <!-- Evolutions -->
-  <div class="pd-block" *ngIf="pokemon.evolutions?.length">
+  <div class="pd-block" *ngIf="pokemon.evolutions?.length" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
     <h3 class="pd-block-title">Evolutions</h3>
     <p class="pd-evo-text" [innerHTML]="generateEvolutionText()"></p>
   </div>
 
   <!-- Pokédex Entries -->
-  <div class="pd-block" *ngIf="pokemon.descriptions?.length">
+  <div class="pd-block" *ngIf="pokemon.descriptions?.length" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
     <h3 class="pd-block-title">Pokédex Entries</h3>
     <ul class="pd-dex-list">
       <li *ngFor="let d of pokemon.descriptions" class="pd-dex-item">

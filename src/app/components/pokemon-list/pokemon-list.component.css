@@ -101,7 +101,7 @@
 }
 
 .version-buttons button.active {
-  background-color: #4CAF50;
+  background-color: var(--label-color);;
   color: white;
 }
 
