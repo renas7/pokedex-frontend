@@ -83,7 +83,7 @@ h1, h2, h3, .title {
 
 .pd-block {
   /* background: #bbe3a7; */
-  border: 1px solid #1f2937;
+  /* border: 1px solid #1f2937; */
   border-radius: 12px;
   padding: 3px;
   box-shadow: 0 6px 24px rgba(0,0,0,0.25);
@@ -92,9 +92,8 @@ h1, h2, h3, .title {
 
 .pd-block-title {
   margin: 0 0 4px 0;
-  font-weight: 800;
-  font-size: 16px;
-  align-items: center;
+  font-size: 14px;
+  text-align: center;
   /* color: #f3f4f6; */
 }
 
@@ -108,15 +107,35 @@ h1, h2, h3, .title {
   list-style: none;
 }
 
+.pd-shared {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  gap: 2px;
+}
+
+.pd-shared50 {
+  flex: 1;
+}
+
 .pd-type-badge {
-  /* color: #0b0f1a; */
+  /* color: #0b0f1a;
   font-weight: 800;
   letter-spacing: 0.25px;
   padding: 6px 10px;
   border-radius: 999px;
   border: 1px solid rgba(0,0,0,0.2);
   box-shadow: 0 3px 10px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.25);
-  text-transform: capitalize;
+  text-transform: capitalize; */
+
+  color: white;
+  padding: 4px 10px;
+  margin-right: 6px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  display: inline-block;
+
 }
 
 /* Abilities */
@@ -178,7 +197,10 @@ h1, h2, h3, .title {
 /* .pd-dex-text { color: #e5e7eb; } */
 
 /* Generic text */
-/* .pd-text { color: #d1d5db; margin: 0; } */
+.pd-text { 
+  /* color: #d1d5db; margin: 0;  */
+  text-align: center;
+}
 
 /* Forms */
 .forms-list {
@@ -287,7 +309,7 @@ h1, h2, h3, .title {
   display: flex;
 }
 .seg { height: 100%; }
-.seg.male { background: #60a5fa; }       /* blue */
+.seg.male { background: #0072ff; }       /* blue */
 .seg.female { background: #f472b6; }     /* pink */
 .seg.genderless { background: #94a3b8; } /* gray */
 
@@ -297,13 +319,13 @@ h1, h2, h3, .title {
   font-size: 14px;
   color: #e5e7eb;
 }
-.gender-values .male { color: #93c5fd; }
+.gender-values .male { color: #0072ff; }
 .gender-values .female { color: #f9a8d4; }
 .gender-values .genderless { color: #cbd5e1; }
 
 .pd-left {
   border-radius: 12px;
-  border: 1px solid;
+  /* border: 1px solid; */
   padding: 5px;
 }
 

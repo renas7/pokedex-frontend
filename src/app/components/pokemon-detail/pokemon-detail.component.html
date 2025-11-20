@@ -36,47 +36,75 @@
       </div>
 
       <!-- Egg Groups -->
-      <div class="pd-block" *ngIf="pokemon.egg_groups?.length" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
-        <p>Breeding</p>
-        <div>
-          <h3 class="pd-block-title">Egg Groups</h3>
-          <p class="pd-text">{{ pokemon.egg_groups?.join(', ') }}</p>
+      <div class="pd-block pd-center" *ngIf="pokemon.egg_groups?.length" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
+        <h3 class="pd-block-title">Breeding</h3>
+        <div class="pd-shared">
+          <div class="pd-shared50">
+            <h3 class="pd-block-title">Egg Groups</h3>
+            <div class="pd-text pd-wbg">{{ pokemon.egg_groups?.join(', ') }}</div>
+          </div>
+          <div class="pd-shared50">
+            <h3 class="pd-block-title">Hatch time</h3>
+            <div class="pd-text pd-wbg"> {{ pokemon.hatch_time }} </div>
+          </div>
         </div>
         <div>
-          <h3 class="pd-block-title">Hatch time</h3>
-          <p class="pd-text"> {{ pokemon.hatch_time }} </p>
-        </div>
-        <div>
-        </div>
-      </div>
-
-      <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
-        <div>
-          <h3 class="pd-block-title">Height</h3>
-          <p class="pd-text">{{ pokemon.height }} m</p>
-        </div>
-        <div>
-          <h3 class="pd-block-title">Weight</h3>
-          <p class="pd-text"> {{ pokemon.weight }} kg</p>
         </div>
       </div>
 
+      <!-- Height Weight -->
       <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
-        <p class="pd-text">Base Experience: {{ pokemon.base_experience }}</p>
-        <p class="pd-text">Base Friendship: {{ pokemon.base_friendship }}</p>
-      </div>
-      <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
-        <p class="pd-text">Catch rate: {{ pokemon.capture_rate }}</p>
-        <p class="pd-text">Generation: {{ pokemon.generation }}</p>
-      </div>
-      <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
-        <p class="pd-text">Species: {{ pokemon.species }}</p>
+        <div class="pd-shared">
+          <div class="pd-shared50">
+            <h3 class="pd-block-title">Height</h3>
+            <div class="pd-text pd-wbg">{{ pokemon.height }} m</div>
+          </div>
+          <div class="pd-shared50">
+            <h3 class="pd-block-title">Weight</h3>
+            <div class="pd-text pd-wbg"> {{ pokemon.weight }} kg</div>
+          </div>
+        </div>
       </div>
 
+      <!-- Base XP Friendship -->
+      <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
+        <div class="pd-shared">
+          <div class="pd-shared50">
+            <h3 class="pd-block-title">Base Experience</h3>
+            <div class="pd-text pd-wbg">{{ pokemon.base_experience }}</div>
+          </div>
+          <div class="pd-shared50">
+            <h3 class="pd-block-title">Base Friendship</h3>
+            <div class="pd-text pd-wbg">{{ pokemon.base_friendship }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Catch Gen -->
+      <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
+        <div class="pd-shared">
+          <div class="pd-shared50">
+            <h3 class="pd-block-title">Catch rate</h3>
+            <div class="pd-text pd-wbg">{{ pokemon.capture_rate }}</div>
+          </div>
+          <div class="pd-shared50">
+            <h3 class="pd-block-title">Generation</h3>
+            <div class="pd-text pd-wbg">{{ pokemon.generation }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Species-->
+      <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
+        <h3 class="pd-block-title">Species</h3>
+        <div class="pd-text pd-wbg">{{ pokemon.species }}</div>
+      </div>
+
+      <!-- Gender Ratio-->
       <div class="pd-block" *ngIf="pokemon" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) } ">
         <h3 class="pd-block-title">Gender Ratio</h3>
 
-        <div class="gender-row" [class.genderless]="gender.genderless">
+        <div class="gender-row pd-wbg" [class.genderless]="gender.genderless">
           <div class="gender-bar" role="img" [attr.aria-label]="genderAriaLabel()">
             <!-- two segments when gendered -->
             <div *ngIf="!gender.genderless" class="seg male"   [style.width.%]="gender.male"></div>
