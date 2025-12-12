@@ -20,14 +20,40 @@
 
   <fieldset>
     <legend>Types</legend>
-    <select multiple formControlName="type_ids">
-      <option *ngFor="let t of types" [value]="t.id">{{ t.name }}</option>
-    </select>
+    <label>Type 1 (primary)
+      <select formControlName="type1_id">
+        <option [ngValue]="null">— select —</option>
+        <option *ngFor="let t of types" [value]="t.id">{{ t.name }}</option>
+      </select>
+    </label>
+
+    <label>Type 2 (optional)
+      <select formControlName="type2_id">
+        <option [ngValue]="null">— none —</option>
+        <option *ngFor="let t of types"
+                [value]="t.id"
+                [disabled]="type1Id != null && t.id === type1Id">
+          {{ t.name }}
+        </option>
+      </select>
+    </label>
+
+    <small *ngIf="form.value.type1_id && form.value.type2_id && form.value.type1_id === form.value.type2_id"
+          style="color:#f87171">Type 1 and Type 2 cannot be the same.</small>
+    <small>A single-type Pokémon should leave Type 2 as “none”.</small>
   </fieldset>
 
   <fieldset>
     <legend>Abilities</legend>
-    <select multiple formControlName="abilities">
+
+    <label>Normal Abilities</label>
+    <select multiple formControlName="normal_ability_ids">
+      <option *ngFor="let a of abilitiesList" [value]="a.id">{{ a.name }}</option>
+    </select>
+
+    <label>Hidden Ability</label>
+    <select formControlName="hidden_ability_id">
+      <option [ngValue]="null">— none —</option>
       <option *ngFor="let a of abilitiesList" [value]="a.id">{{ a.name }}</option>
     </select>
   </fieldset>
@@ -35,8 +61,15 @@
   <fieldset>
     <legend>Egg Groups</legend>
     <select multiple formControlName="egg_group_ids">
-      <option *ngFor="let g of eggGroups" [value]="g.id">{{ g.name }}</option>
+      <option
+        *ngFor="let g of eggGroups"
+        [value]="g.id"
+        [disabled]="(form.value.egg_group_ids?.length || 0) >= 2
+                    && !(form.value.egg_group_ids?.includes(g.id))">
+        {{ g.name }}
+      </option>
     </select>
+    <small>Pick up to 2.</small>
   </fieldset>
 
   <fieldset formGroupName="stats">
@@ -65,16 +98,29 @@
     <legend>Evolutions (from this Pokémon → …)</legend>
     <div formArrayName="evolutions">
       <div *ngFor="let e of evolutionsFA.controls; let i = index" [formGroupName]="i">
-        <select formControlName="to_pokemon_id">
-          <option [ngValue]="null" disabled>-- evolves to --</option>
-          <option *ngFor="let p of pokemonList" [value]="p.id">{{ p.name }}</option>
-        </select>
-        <input formControlName="method" placeholder="Method">
+
+        <div class="row" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+          <label>To Pokémon (ID)
+            <select formControlName="to_pokemon_id">
+              <option [ngValue]="null">— select —</option>
+              <option *ngFor="let p of pokemonList" [value]="p.id">
+                {{ p.name }} <span *ngIf="p.number">(#{{ p.number }})</span>
+              </option>
+            </select>
+          </label>
+
+          <label>or To Number
+            <input type="number" formControlName="to_number" placeholder="e.g. 2">
+          </label>
+        </div>
+
+        <input formControlName="method" placeholder="Method (Level Up, etc)">
         <input type="number" formControlName="level" placeholder="Level (optional)">
         <button type="button" (click)="removeEvolution(i)">Remove</button>
       </div>
     </div>
     <button type="button" (click)="addEvolution()">+ Add Evolution</button>
+    <small>Either select the target by ID or fill the Pokédex number. Backend will resolve the number.</small>
   </fieldset>
 
   <fieldset>
