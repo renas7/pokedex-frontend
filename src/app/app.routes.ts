@@ -6,5 +6,7 @@ import { PokemonFormComponent } from './components/pokemon-form/pokemon-form.com
 export const routes: Routes = [
   { path: '', component: PokemonListComponent },
   { path: 'pokemon/:id', component: PokemonDetailComponent },
-  { path: 'add-pokemon', component: PokemonFormComponent }
+  { path: 'add-pokemon', component: PokemonFormComponent },       //maybe delete later
+  { path: 'pokemon/new', component: PokemonFormComponent },      // create
+  { path: 'pokemon/:id/edit', component: PokemonFormComponent }, // edit
 ];

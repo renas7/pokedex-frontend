@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Pokemon } from '../models/pokemon.model';
@@ -17,5 +17,12 @@ export class PokemonService {
 
   getPokemonById(id: number): Observable<Pokemon> {
     return this.http.get<Pokemon>(`http://localhost:3000/pokemon/${id}`);
-}
+  }
+
+  createPokemon(body: any) {
+    return this.http.post<any>(this.apiUrl, body);
+  }
+  updatePokemon(id: number, body: any) {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, body);
+  }
 }
