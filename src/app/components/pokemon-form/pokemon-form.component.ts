@@ -143,7 +143,30 @@ export class PokemonFormComponent implements OnInit {
     console.log('loadPokemonForEdit called with id:', id);
     this.resetToCreateDefaults();
 
+    forkJoin({
+      abilities: this.http.get<any[]>('http://localhost:3000/abilities'),
+      eggGroups: this.http.get<any[]>('http://localhost:3000/egg-groups'),
+      pokemon: this.api.getPokemonById(id)
+    }).subscribe(({ abilities, eggGroups, pokemon }) => {
+      this.abilitiesList = abilities;
+      this.eggGroups = eggGroups;
+
+      this.loadPokemonIntoForm(pokemon);
+    });
+
     this.api.getPokemonById(id).subscribe((p: any) => {
+      console.log('pokemon edit response:', p);
+      console.log('abilitiesList:', this.abilitiesList);
+      console.log('eggGroups:', this.eggGroups);
+      // console.log('mapped normalAbilityIds:', normalAbilityIds);
+      // console.log('mapped eggGroupIds:', eggGroupIds);
+      const normalAbilityIds = (p.abilities || [])
+        .map((a: any) => this.abilitiesList.find(x => x.name === a.name)?.id)
+        .filter((id: number | undefined) => id != null) as number[];
+
+      const eggGroupIds = (p.egg_groups || [])
+        .map((name: string) => this.eggGroups.find(x => x.name === name)?.id)
+        .filter((id: number | undefined) => id != null) as number[];
       this.form.patchValue({
         name: p.name ?? '',
         number: p.number ?? null,
@@ -160,6 +183,11 @@ export class PokemonFormComponent implements OnInit {
 
         type1_id: this.nameToTypeId(p.types?.[0] ?? null),
         type2_id: this.nameToTypeId(p.types?.[1] ?? null),
+
+        normal_ability_ids: normalAbilityIds,
+        hidden_ability_id: null, // for now
+        egg_group_ids: eggGroupIds,
+
 
         stats: p.stats || {}
       });
@@ -196,6 +224,75 @@ export class PokemonFormComponent implements OnInit {
     });
   }
 
+  private loadPokemonIntoForm(p: any) {
+    const normalAbilityIds = (p.abilities || [])
+      .filter((a: any) => !a.is_hidden)
+      .map((a: any) => this.abilitiesList.find(x => x.name === a.name)?.id)
+      .filter((id: number | undefined) => id != null) as number[];
+
+    const hiddenAbilityId =
+      p.abilities?.find((a: any) => a.is_hidden)
+        ? this.abilitiesList.find(x => x.name === p.abilities.find((a: any) => a.is_hidden)?.name)?.id ?? null
+        : null;
+
+    const eggGroupIds = (p.egg_groups || [])
+      .map((name: string) => this.eggGroups.find(x => x.name === name)?.id)
+      .filter((id: number | undefined) => id != null) as number[];
+
+    this.form.patchValue({
+      name: p.name ?? '',
+      number: p.number ?? null,
+      species: p.species ?? '',
+      height: p.height ?? null,
+      weight: p.weight ?? null,
+      generation: p.generation ?? 1,
+      base_experience: p.base_experience ?? 0,
+      capture_rate: p.capture_rate ?? 0,
+      hatch_time: p.hatch_time ?? null,
+      base_friendship: p.base_friendship ?? null,
+      gender_male: p.gender_male ?? null,
+      gender_female: p.gender_female ?? null,
+
+      type1_id: this.nameToTypeId(p.types?.[0] ?? null),
+      type2_id: this.nameToTypeId(p.types?.[1] ?? null),
+
+      normal_ability_ids: normalAbilityIds,
+      hidden_ability_id: hiddenAbilityId,
+      egg_group_ids: eggGroupIds,
+
+      stats: p.stats || {}
+    });
+
+    this.descriptionsFA.clear();
+    (p.descriptions || []).forEach((d: any) => {
+      this.descriptionsFA.push(this.fb.group({
+        game: [d.game ?? ''],
+        text: [d.text ?? '']
+      }));
+    });
+    if (this.descriptionsFA.length === 0) this.addDescription();
+
+    this.evolutionsFA.clear();
+    (p.evolutions || [])
+      .filter((e: any) => e.from_pokemon_id === this.currentId)
+      .forEach((e: any) => {
+        this.evolutionsFA.push(this.fb.group({
+          to_pokemon_id: [e.to_pokemon_id ?? null],
+          to_number: [null],
+          method: [e.method || 'Level Up'],
+          level: [e.level ?? null]
+        }));
+      });
+
+    this.formsFA.clear();
+    (p.forms || []).forEach((f: any) => {
+      this.formsFA.push(this.fb.group({
+        form_name: [f.form_name ?? ''],
+        form_type: [f.form_type ?? '']
+      }));
+    });
+  }
+
   addDescription() {
     this.descriptionsFA.push(this.fb.group({
       game: [''],
@@ -221,6 +318,94 @@ export class PokemonFormComponent implements OnInit {
     }));
   }
   removeFormRow(i: number) { this.formsFA.removeAt(i); }
+  showAbilitiesDropdown = false;
+
+  toggleAbilitiesDropdown() {
+    this.showAbilitiesDropdown = !this.showAbilitiesDropdown;
+  }
+
+  selectedAbilitiesLabel(): string {
+    const ids = this.form.value.normal_ability_ids || [];
+
+    if (!ids.length) return 'Select abilities';
+
+    const names = ids
+      .map(id => this.abilitiesList.find(a => a.id === id)?.name)
+      .filter(Boolean);
+
+    return names.join(', ');
+  }
+  
+  onNormalAbilityChange(event: Event, abilityId: number) {
+    const checked = (event.target as HTMLInputElement).checked;
+    const current = [...(this.form.get('normal_ability_ids')?.value || [])];
+
+    if (checked) {
+      if (!current.includes(abilityId)) {
+        current.push(abilityId);
+      }
+    } else {
+      const index = current.indexOf(abilityId);
+      if (index > -1) {
+        current.splice(index, 1);
+      }
+    }
+
+    this.form.get('normal_ability_ids')?.setValue(current);
+  }
+
+  onHiddenAbilityChange(abilityId: number | null) {
+    this.form.get('hidden_ability_id')?.setValue(abilityId);
+    this.showHiddenAbilityDropdown = false;
+  }
+
+  onEggGroupChange(event: Event, eggGroupId: number) {
+    const checked = (event.target as HTMLInputElement).checked;
+    const current = [...(this.form.get('egg_group_ids')?.value || [])];
+
+    if (checked) {
+      if (!current.includes(eggGroupId) && current.length < 2) {
+        current.push(eggGroupId);
+      }
+    } else {
+      const index = current.indexOf(eggGroupId);
+      if (index > -1) {
+        current.splice(index, 1);
+      }
+    }
+
+    this.form.get('egg_group_ids')?.setValue(current);
+  }
+  showHiddenAbilityDropdown = false;
+  showEggGroupsDropdown = false;
+
+  toggleHiddenAbilityDropdown() {
+    this.showHiddenAbilityDropdown = !this.showHiddenAbilityDropdown;
+  }
+
+  toggleEggGroupsDropdown() {
+    this.showEggGroupsDropdown = !this.showEggGroupsDropdown;
+  }
+
+  selectedHiddenAbilityLabel(): string {
+    const id = this.form.value.hidden_ability_id;
+
+    if (id == null) return 'None';
+
+    return this.abilitiesList.find(a => a.id === id)?.name || 'Select hidden ability';
+  }
+
+  selectedEggGroupsLabel(): string {
+    const ids = this.form.value.egg_group_ids || [];
+
+    if (!ids.length) return 'Select egg groups';
+
+    const names = ids
+      .map(id => this.eggGroups.find(g => g.id === id)?.name)
+      .filter(Boolean);
+
+    return names.join(', ');
+  }
 
   // prevent selecting more than N in a native <select multiple>
   enforceMaxMulti(evt: Event, controlName: string, max: number) {

@@ -1,5 +1,5 @@
 <!-- pokemon-form.component.html -->
-<h2>Add Pokémon</h2>
+<h2>{{ isEdit ? 'Edit Pokémon' : 'Add Pokémon' }}</h2>
 
 <form [formGroup]="form" (ngSubmit)="submit()">
   <fieldset>
@@ -44,31 +44,76 @@
   </fieldset>
 
   <fieldset>
-    <legend>Abilities</legend>
-
     <label>Normal Abilities</label>
-    <select multiple formControlName="normal_ability_ids">
-      <option *ngFor="let a of abilitiesList" [value]="a.id">{{ a.name }}</option>
-    </select>
+    <div class="dropdown-box">
+      <div class="dropdown-header" (click)="toggleAbilitiesDropdown()">
+        {{ selectedAbilitiesLabel() }}
+      </div>
+
+      <div class="dropdown-content" *ngIf="showAbilitiesDropdown">
+        <label class="checkbox-item" *ngFor="let a of abilitiesList">
+          <input
+            type="checkbox"
+            [checked]="form.value.normal_ability_ids?.includes(a.id)"
+            (change)="onNormalAbilityChange($event, a.id)"
+          >
+          <span>{{ a.name }}</span>
+        </label>
+      </div>
+    </div>
 
     <label>Hidden Ability</label>
-    <select formControlName="hidden_ability_id">
-      <option [ngValue]="null">— none —</option>
-      <option *ngFor="let a of abilitiesList" [value]="a.id">{{ a.name }}</option>
-    </select>
+
+    <div class="dropdown-box">
+      <div class="dropdown-header" (click)="toggleHiddenAbilityDropdown()">
+        {{ selectedHiddenAbilityLabel() }}
+      </div>
+
+      <div class="dropdown-content" *ngIf="showHiddenAbilityDropdown">
+        <label class="checkbox-item">
+          <input
+            type="radio"
+            name="hiddenAbility"
+            [checked]="form.value.hidden_ability_id === null"
+            (change)="onHiddenAbilityChange(null)"
+          >
+          <span>None</span>
+        </label>
+
+        <label class="checkbox-item" *ngFor="let a of abilitiesList">
+          <input
+            type="radio"
+            name="hiddenAbility"
+            [checked]="form.value.hidden_ability_id === a.id"
+            (change)="onHiddenAbilityChange(a.id)"
+          >
+          <span>{{ a.name }}</span>
+        </label>
+      </div>
+    </div>
   </fieldset>
 
   <fieldset>
-    <legend>Egg Groups</legend>
-    <select multiple formControlName="egg_group_ids">
-      <option
-        *ngFor="let g of eggGroups"
-        [value]="g.id"
-        [disabled]="(form.value.egg_group_ids?.length || 0) >= 2
-                    && !(form.value.egg_group_ids?.includes(g.id))">
-        {{ g.name }}
-      </option>
-    </select>
+    <label>Egg Groups</label>
+
+    <div class="dropdown-box">
+      <div class="dropdown-header" (click)="toggleEggGroupsDropdown()">
+        {{ selectedEggGroupsLabel() }}
+      </div>
+
+      <div class="dropdown-content" *ngIf="showEggGroupsDropdown">
+        <label class="checkbox-item" *ngFor="let g of eggGroups">
+          <input
+            type="checkbox"
+            [checked]="form.value.egg_group_ids?.includes(g.id)"
+            [disabled]="(form.value.egg_group_ids?.length || 0) >= 2 && !(form.value.egg_group_ids?.includes(g.id))"
+            (change)="onEggGroupChange($event, g.id)"
+          >
+          <span>{{ g.name }}</span>
+        </label>
+      </div>
+    </div>
+
     <small>Pick up to 2.</small>
   </fieldset>
 
@@ -99,7 +144,7 @@
     <div formArrayName="evolutions">
       <div *ngFor="let e of evolutionsFA.controls; let i = index" [formGroupName]="i">
 
-        <div class="row" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+        <div class="row">
           <label>To Pokémon (ID)
             <select formControlName="to_pokemon_id">
               <option [ngValue]="null">— select —</option>

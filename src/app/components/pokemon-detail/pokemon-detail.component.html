@@ -232,4 +232,7 @@
       </li>
     </ul>
   </div>
+
+  <button class="EditBut" [ngStyle]="{ 'background-color': getTypeColor(pokemon.types[0]) }" (click)="goToEdit(pokemon.id)">Edit</button>
+
 </div>

@@ -425,4 +425,7 @@ export class PokemonDetailComponent implements OnInit {
     return `${this.pokemon?.name}: ${this.gender.male}% male, ${this.gender.female}% female`;
   }
 
+  goToEdit(id: number) {
+    this.router.navigate(['/pokemon', id, 'edit']);
+  }
 }

@@ -339,3 +339,15 @@ h1, h2, h3, .title {
   justify-items: center;
   justify-content: center;
 }
+
+.EditBut {
+  color: #eee;
+  font-weight: bold;
+  margin: 4px;
+  padding: 4px 10px;
+  border: none;
+  background-color: #eee;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
