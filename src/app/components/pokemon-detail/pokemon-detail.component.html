@@ -15,7 +15,7 @@
     <div class="pd-left" [ngStyle]="{ 'background-color': getTypeColor(pokemon.types[0]) } ">
       <div class="pd-art">
         <img [src]="getArtPath()"
-        [alt]="pokemon.name + ' artwork'"
+        [alt]="formatImageName(pokemon.name) + ' artwork'"
         loading="lazy" decoding="async">
       </div>
 

@@ -15,8 +15,8 @@ npm start
   [style.borderColor]="getTypeColor(poke.types[0])"
   [style.--hoverBg]="getBgTypeColor(poke.types[0])">
     <div class="poke-number">#{{ formatNumber(poke.number) }}</div>
-    <img class="pokemon-image" [src]="'assets/images/' + formatNumber(poke.number) + '-' + poke.name + '.png'" [alt]="poke.name" />
-    <h2 style="margin: 10px;">{{ poke.name }}</h2>
+    <img class="pokemon-image" [src]="'assets/images/' + formatNumber(poke.number) + '-' + formatImageName(poke.name) + '.png'" [alt]="poke.name" />
+    <h2 style="margin: 10px;">{{ formatImageName(poke.name) }}</h2>
     
     <div class="types" *ngIf="poke.types">
       <span 
@@ -41,7 +41,7 @@ npm start
       [style.--label-color]="getTypeColor(selectedPokemon.types[0])">
         <!-- <p class="label"> #{{ formatNumber(selectedPokemon.number) }}</p> -->
         <img class="pokemon-image" [src]="'assets/images/sprites/' + selectedPokemon.number + '.png'" [alt]="selectedPokemon.name" />
-        <h2>{{ selectedPokemon.name }}</h2>
+        <h2>{{ formatImageName(selectedPokemon.name) }}</h2>
 
       </div>
       
@@ -100,13 +100,13 @@ npm start
 
       <div class="label" 
       [attr.data-title]="'Pokédex entry'" 
-      *ngIf="selectedPokemon?.descriptions?.length" 
+      *ngIf="(selectedPokemon?.descriptions?.length ?? 0) > 0"
       [ngStyle]="{ 'border-color': getTypeColor(selectedPokemon.types[0]) }"
       [style.--label-color]="getTypeColor(selectedPokemon.types[0])">
         <div class="version-buttons">
           <!-- [ngStyle]="{ 'background-color': getTypeColor(selectedPokemon.types[0])}" -->
           <button 
-            *ngFor="let desc of selectedPokemon.descriptions"
+            *ngFor="let desc of selectedPokemon.descriptions | slice:0:2"
             (click)="selectGameVersion(desc.game)"
             [class.active]="desc.game === selectedGameVersion"
           >

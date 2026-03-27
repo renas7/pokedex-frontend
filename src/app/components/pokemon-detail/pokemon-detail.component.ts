@@ -15,6 +15,32 @@ import { Pokemon } from '../../models/pokemon.model';
 export class PokemonDetailComponent implements OnInit {
   pokemon: Pokemon | null = null;
 
+  readonly GAME_ORDER = [
+    'Red', 'Blue', 'Yellow',
+    'Gold', 'Silver', 'Crystal',
+    'Ruby', 'Sapphire', 'Emerald',
+    'FireRed', 'LeafGreen',
+    'Diamond', 'Pearl', 'Platinum',
+    'HeartGold', 'SoulSilver',
+    'Black', 'White',
+    'Black 2', 'White 2',
+    'X', 'Y',
+    'Omega Ruby', 'Alpha Sapphire',
+    'Sun', 'Moon',
+    'Ultra Sun', 'Ultra Moon',
+    'Lets Go Pikachu', 'Lets Go Eevee',
+    'Sword', 'Shield',
+    'Brilliant Diamond', 'Shining Pearl',
+    'Legends Arceus',
+    'Scarlet', 'Violet'
+  ];
+
+  getGameOrderIndex(label: string): number {
+    const firstGame = label.split('/')[0];
+    const index = this.GAME_ORDER.indexOf(firstGame);
+    return index === -1 ? 999 : index;
+  }
+
   // === ADD: type color map ===
   private typeColor: Record<string, string> = {
     Normal:  '#A8A77A',
@@ -51,8 +77,17 @@ export class PokemonDetailComponent implements OnInit {
         return;
       }
       this.pokemonService.getPokemonById(id).subscribe(poke => {
-        this.pokemon = poke;
-        this.normalizeStats(poke);
+
+        const sortedDescriptions = [...(poke.descriptions || [])].sort(
+          (a, b) => this.getGameOrderIndex(a.game) - this.getGameOrderIndex(b.game)
+        );
+
+        this.pokemon = {
+          ...poke,
+          descriptions: sortedDescriptions
+        };
+
+        this.normalizeStats(this.pokemon);
         this.selectedFormIndex = -1;
         this.defenseMultipliers = this.computeDefenseMultipliers(this.getCurrentTypes());
         this.computeGender();
@@ -66,6 +101,17 @@ export class PokemonDetailComponent implements OnInit {
     return String(num).padStart(4, '0');
   }
 
+  formatImageName(name: string): string { //ADD HERE POKEMON THAT NAME WONT MATCH WITH PICTURE
+    const normalized = name.toLowerCase();
+    //NAME YOU GOT vs NAME YOU WANT
+    if (normalized === 'nidoran-f') return 'Nidoran';
+    if (normalized === 'nidoran-m') return 'Nidoran';
+    if (normalized === 'farfetchd') return 'Farfetch\'d';
+    if (normalized === 'mr-mime') return 'Mr. Mime';
+
+    return name;
+  }
+  
   // === ADD: helper used by template for badge color ===
   getTypeColor(type: string): string {
     return this.typeColor[type] || '#999';
@@ -192,7 +238,7 @@ export class PokemonDetailComponent implements OnInit {
   getArtPath(): string {
     if (!this.pokemon) return '';
     // Default: 0001-Bulbasaur.png (your current naming)
-    const base = `${this.formatNumber(this.pokemon.number)}-${this.pokemon.name}`;
+    const base = `${this.formatNumber(this.pokemon.number)}-${this.formatImageName(this.pokemon.name)}`;
     // If a form is selected AND you have per-form images, append suffix.
     const f = this.pokemon.forms?.[this.selectedFormIndex] ?? null;
     if (this.selectedFormIndex >= 0 && f) {

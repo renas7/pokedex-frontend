@@ -25,14 +25,47 @@ export class PokemonListComponent implements OnInit, OnDestroy {
     });
   }
 
-  openPopup(pokemon: Pokemon): void {
-    this.selectedPokemon = pokemon;
-  // Auto-select the first game version if available
-  if (pokemon.descriptions && pokemon.descriptions.length > 0) {
-    this.selectedGameVersion = pokemon.descriptions[0].game;
-  } else {
-    this.selectedGameVersion = null;
+  readonly GAME_ORDER = [
+    'Red', 'Blue', 'Yellow',
+    'Gold', 'Silver', 'Crystal',
+    'Ruby', 'Sapphire', 'Emerald',
+    'FireRed', 'LeafGreen',
+    'Diamond', 'Pearl', 'Platinum',
+    'HeartGold', 'SoulSilver',
+    'Black', 'White',
+    'Black 2', 'White 2',
+    'X', 'Y',
+    'Omega Ruby', 'Alpha Sapphire',
+    'Sun', 'Moon',
+    'Ultra Sun', 'Ultra Moon',
+    'Lets Go Pikachu', 'Lets Go Eevee',
+    'Sword', 'Shield',
+    'Brilliant Diamond', 'Shining Pearl',
+    'Legends Arceus',
+    'Scarlet', 'Violet'
+  ];
+
+  getGameOrderIndex(label: string): number {
+    const firstGame = label.split('/')[0];
+    const index = this.GAME_ORDER.indexOf(firstGame);
+    return index === -1 ? 999 : index;
   }
+
+  openPopup(pokemon: Pokemon): void {
+    const sortedDescriptions = [...(pokemon.descriptions || [])].sort(
+      (a, b) => this.getGameOrderIndex(a.game) - this.getGameOrderIndex(b.game)
+    );
+
+    this.selectedPokemon = {
+      ...pokemon,
+      descriptions: sortedDescriptions
+    };
+
+    if (sortedDescriptions.length > 0) {
+      this.selectedGameVersion = sortedDescriptions[0].game;
+    } else {
+      this.selectedGameVersion = null;
+    }
   }
 
   closePopup(): void {
@@ -74,6 +107,17 @@ export class PokemonListComponent implements OnInit, OnDestroy {
 
   formatNumber(num: number): string {
     return num.toString().padStart(4, '0');
+  }
+
+  formatImageName(name: string): string { //ADD HERE POKEMON THAT NAME WONT MATCH WITH PICTURE
+    const normalized = name.toLowerCase();
+    //NAME YOU GOT vs NAME YOU WANT
+    if (normalized === 'nidoran-f') return 'Nidoran';
+    if (normalized === 'nidoran-m') return 'Nidoran';
+    if (normalized === 'farfetchd') return 'Farfetch\'d';
+    if (normalized === 'mr-mime') return 'Mr. Mime';
+
+    return name;
   }
 
   goToDetail(id: number) {
