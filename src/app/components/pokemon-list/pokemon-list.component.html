@@ -40,7 +40,7 @@ npm start
       [ngStyle]="{ 'border-color': getTypeColor(selectedPokemon.types[0]) }"
       [style.--label-color]="getTypeColor(selectedPokemon.types[0])">
         <!-- <p class="label"> #{{ formatNumber(selectedPokemon.number) }}</p> -->
-        <img class="pokemon-image" [src]="'assets/images/sprites/' + selectedPokemon.number + '.png'" [alt]="selectedPokemon.name" />
+        <img class="pokemon-image" [src]="'assets/images/sprites/' + selectedPokemon.number + '.gif'" [alt]="selectedPokemon.name" />
         <h2>{{ formatImageName(selectedPokemon.name) }}</h2>
 
       </div>

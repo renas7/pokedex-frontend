@@ -236,3 +236,269 @@
   <button class="EditBut" [ngStyle]="{ 'background-color': getTypeColor(pokemon.types[0]) }" (click)="goToEdit(pokemon.id)">Edit</button>
 
 </div>
+
+<div *ngIf="pokemon" class="pokemon-detail">
+  <!-- Header -->
+  <div class="pd-header">
+    <button class="pd-back" [routerLink]="['/']" aria-label="Back to Pokédex">← Back</button>
+    <h1 class="pd-title">
+      <span class="pd-name">{{ pokemon.name }}</span>
+      <span class="pd-number">#{{ formatNumber(pokemon.number) }}</span>
+    </h1>
+  </div>
+
+  <!-- TOP: 3 COLUMNS -->
+  <div class="pd-top pd-top-3col">
+
+    <!-- COLUMN 1: ART + PROFILE LEFT-->
+    <div class="pd-col pd-col-left">
+      <!-- Artwork -->
+      <div class="pd-left pd-art-block" [ngStyle]="{ 'background-color': getTypeColor(pokemon.types[0]) }">
+        <div class="pd-art">
+          <img
+            [src]="getArtPath()"
+            [alt]="formatImageName(pokemon.name) + ' artwork'"
+            loading="lazy"
+            decoding="async">
+        </div>
+
+        <!-- Types -->
+        <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) }">
+          <div class="pd-center">
+            <h3 class="pd-block-title">Types</h3>
+          </div>
+
+          <ul class="pd-type-list pd-wbg pd-center">
+            <li
+              *ngFor="let type of pokemon.types"
+              class="pd-type-badge"
+              [style.backgroundColor]="getTypeColor(type)">
+              {{ type }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- Profile -->
+        <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) }">
+          <h3 class="pd-block-title">Profile</h3>
+
+          <div class="pd-shared">
+            <div class="pd-shared50">
+              <h3 class="pd-block-title">Species</h3>
+              <div class="pd-text pd-wbg">{{ pokemon.species }}</div>
+            </div>
+            <div class="pd-shared50">
+              <h3 class="pd-block-title">Generation</h3>
+              <div class="pd-text pd-wbg">{{ pokemon.generation }}</div>
+            </div>
+          </div>
+
+          <div class="pd-shared">
+            <div class="pd-shared50">
+              <h3 class="pd-block-title">Height</h3>
+              <div class="pd-text pd-wbg">{{ pokemon.height }} m</div>
+            </div>
+            <div class="pd-shared50">
+              <h3 class="pd-block-title">Weight</h3>
+              <div class="pd-text pd-wbg">{{ pokemon.weight }} kg</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gender Ratio -->
+        <div class="pd-block" *ngIf="pokemon" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) }">
+          <h3 class="pd-block-title">Gender Ratio</h3>
+
+          <div class="gender-row pd-wbg" [class.genderless]="gender.genderless">
+            <div class="gender-bar" role="img" [attr.aria-label]="genderAriaLabel()">
+              <div *ngIf="!gender.genderless" class="seg male" [style.width.%]="gender.male"></div>
+              <div *ngIf="!gender.genderless" class="seg female" [style.width.%]="gender.female"></div>
+              <div *ngIf="gender.genderless" class="seg genderless" style="width:100%"></div>
+            </div>
+
+            <div class="gender-values" *ngIf="!gender.genderless">
+              <span class="male">{{ gender.male | number:'1.0-1' }}% male</span>
+              <span class="female">{{ gender.female | number:'1.0-1' }}% female</span>
+            </div>
+
+            <div class="gender-values" *ngIf="gender.genderless">
+              <span class="genderless">Genderless</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Breeding -->
+        <div class="pd-block" *ngIf="pokemon.egg_groups?.length" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) }">
+          <h3 class="pd-block-title">Breeding</h3>
+
+          <div class="pd-shared">
+            <div class="pd-shared50">
+              <h3 class="pd-block-title">Egg Groups</h3>
+              <div class="pd-text pd-wbg">{{ pokemon.egg_groups?.join(', ') }}</div>
+            </div>
+            <div class="pd-shared50">
+              <h3 class="pd-block-title">Hatch Time</h3>
+              <div class="pd-text pd-wbg">{{ pokemon.hatch_time }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COLUMN 2: BATTLE -->
+    <div class="pd-col pd-col-middle">
+      <!-- Abilities -->
+      <div class="pd-block" *ngIf="pokemon.abilities?.length" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) }">
+        <h3 class="pd-block-title">Abilities</h3>
+        <ul class="pd-ability-list">
+          <li *ngFor="let ability of pokemon.abilities" class="pd-ability-item">
+            <div class="pd-ability-header">
+              <strong class="pd-ability-name">{{ ability.name }}</strong>
+              <span *ngIf="ability.is_hidden" class="pd-hidden-tag" title="Hidden Ability">Hidden</span>
+            </div>
+            <p class="pd-ability-desc">{{ ability.description }}</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Base Stats -->
+      <div class="pd-block" *ngIf="statsMap" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) }">
+        <h3 class="pd-block-title">Base Stats</h3>
+        <ul class="stats-list">
+          <li class="stat-row" *ngFor="let s of statOrder">
+            <span class="stat-name">{{ s }}</span>
+            <span class="stat-value">{{ statsMap?.[s] }}</span>
+            <div class="stat-bar">
+              <div class="stat-fill" [style.width.%]="statPercent(statsMap?.[s])"></div>
+            </div>
+          </li>
+          <li class="stat-row total">
+            <span class="stat-name">Total</span>
+            <span class="stat-value">{{ statTotal() }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="pd-block" *ngIf="!statsMap" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) }">
+        <h3 class="pd-block-title">Base Stats</h3>
+        <p class="pd-text">No stats available for this Pokémon.</p>
+      </div>
+
+      <!-- Type Effectiveness -->
+      <div class="pd-block" *ngIf="defenseMultipliers" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) }">
+        <h3 class="pd-block-title">Type Effectiveness (Defense)</h3>
+
+        <div class="type-grid">
+          <div
+            *ngFor="let t of typeList"
+            class="type-cell"
+            [class.m4]="defenseMultipliers[t] === 4"
+            [class.m2]="defenseMultipliers[t] === 2"
+            [class.m1]="defenseMultipliers[t] === 1"
+            [class.mh]="defenseMultipliers[t] === 0.5"
+            [class.mq]="defenseMultipliers[t] === 0.25"
+            [class.m0]="defenseMultipliers[t] === 0">
+            <div class="type-pill" [style.backgroundColor]="getTypeColor(t)">{{ t }}</div>
+            <div class="type-mult">{{ formatMultiplier(defenseMultipliers[t]) }}</div>
+          </div>
+        </div>
+
+        <div class="type-legend">
+          <span class="lg m4">4×</span>
+          <span class="lg m2">2×</span>
+          <span class="lg m1">1×</span>
+          <span class="lg mh">½×</span>
+          <span class="lg mq">¼×</span>
+          <span class="lg m0">0×</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUMN 3: TRAINING / EXTRA -->
+    <div class="pd-col pd-col-right">
+      <!-- Training -->
+      <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) }">
+        <h3 class="pd-block-title">Training</h3>
+
+        <div class="pd-shared">
+          <div class="pd-shared50">
+            <h3 class="pd-block-title">Base Experience</h3>
+            <div class="pd-text pd-wbg">{{ pokemon.base_experience }}</div>
+          </div>
+          <div class="pd-shared50">
+            <h3 class="pd-block-title">Base Friendship</h3>
+            <div class="pd-text pd-wbg">{{ pokemon.base_friendship }}</div>
+          </div>
+        </div>
+
+        <div class="pd-shared">
+          <div class="pd-shared50">
+            <h3 class="pd-block-title">Catch Rate</h3>
+            <div class="pd-text pd-wbg">{{ pokemon.capture_rate }}</div>
+          </div>
+          <div class="pd-shared50">
+            <h3 class="pd-block-title">Number</h3>
+            <div class="pd-text pd-wbg">#{{ formatNumber(pokemon.number) }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Forms -->
+      <div class="pd-block" *ngIf="pokemon.forms?.length" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) }">
+        <h3 class="pd-block-title">Forms</h3>
+
+        <div class="forms-list">
+          <button
+            class="form-chip"
+            [class.active]="selectedFormIndex === -1"
+            (click)="selectForm(-1)">
+            Default
+          </button>
+
+          <button
+            *ngFor="let f of pokemon.forms; let i = index"
+            class="form-chip"
+            [class.active]="selectedFormIndex === i"
+            (click)="selectForm(i)">
+            {{ getFormLabel(f) }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Extra Info placeholder -->
+      <div class="pd-block" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) }">
+        <h3 class="pd-block-title">Extra Info</h3>
+        <div class="pd-text pd-wbg">More species data can go here later.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM: FULL WIDTH -->
+  <div class="pd-bottom">
+
+    <!-- Evolutions -->
+    <div class="pd-block" *ngIf="pokemon.evolutions?.length" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) }">
+      <h3 class="pd-block-title">Evolutions</h3>
+      <p class="pd-evo-text" [innerHTML]="generateEvolutionText()"></p>
+    </div>
+
+    <!-- Pokédex Entries -->
+    <div class="pd-block" *ngIf="pokemon.descriptions?.length" [ngStyle]="{ 'background-color': getBgTypeColor(pokemon.types[0]) }">
+      <h3 class="pd-block-title">Pokédex Entries</h3>
+      <ul class="pd-dex-list">
+        <li *ngFor="let d of pokemon.descriptions" class="pd-dex-item">
+          <span class="pd-game">{{ d.game }}:</span>
+          <span class="pd-dex-text">{{ d.text }}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <button
+    class="EditBut"
+    [ngStyle]="{ 'background-color': getTypeColor(pokemon.types[0]) }"
+    (click)="goToEdit(pokemon.id)">
+    Edit
+  </button>
+</div>
