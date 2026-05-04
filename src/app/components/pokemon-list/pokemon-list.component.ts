@@ -22,6 +22,15 @@ export class PokemonListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.pokemonService.getAllPokemon().subscribe((data: Pokemon[]) => {
       this.pokemons = data;
+
+      // Restore scroll after data loads
+      const saved = sessionStorage.getItem('scrollPosition');
+      if (saved) {
+        setTimeout(() => {
+          window.scrollTo(0, Number(saved));
+          sessionStorage.removeItem('scrollPosition');
+        }, 0);
+      }
     });
   }
 
@@ -121,6 +130,7 @@ export class PokemonListComponent implements OnInit, OnDestroy {
   }
 
   goToDetail(id: number) {
+    sessionStorage.setItem('scrollPosition', String(window.scrollY));
     this.router.navigate(['/pokemon', id]);
   }
 
