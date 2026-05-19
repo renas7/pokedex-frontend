@@ -206,3 +206,161 @@
   z-index: 10;
   position: relative;
 }
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+
+  margin: 20px auto 10px auto;
+  padding: 18px;
+
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255,255,255,0.08);
+
+  border-radius: 18px;
+
+  max-width: 1024px;
+  backdrop-filter: blur(8px);
+}
+
+.filter-bar input,
+.filter-bar select {
+  height: 42px;
+
+  padding: 0 14px;
+
+  border: solid;
+  border-radius: 25px;
+  border-color: #ee1515;
+
+  background: rgba(255,255,255,0.12);
+  /* color: white; */
+
+  font-size: 14px;
+  outline: none;
+
+  transition: 0.2s ease;
+}
+
+.filter-bar input {
+  flex: 1;
+  min-width: 220px;
+}
+
+.filter-bar select {
+  min-width: 160px;
+  cursor: pointer;
+}
+
+.filter-bar input:focus,
+.filter-bar select:focus {
+  background: rgba(255,255,255,0.18);
+  transform: translateY(-1px);
+}
+
+.filter-bar button {
+  height: 42px;
+
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: #ee1515;
+  color: white;
+
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.filter-bar button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.filter-bar option {
+  color: black;
+}
+
+@media (max-width: 700px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-bar input,
+  .filter-bar select,
+  .filter-bar button {
+    width: 100%;
+  }
+}
+
+.grid {
+  width: min(1300px, 95%);
+  margin: auto;
+}
+
+.type-checkbox-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+
+  width: 100%;
+  padding-top: 5px;
+}
+
+.filter-label {
+  font-weight: 700;
+  /* color: white; */
+  margin-right: 8px;
+}
+
+.type-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 7px 11px;
+
+  border: 2px solid var(--type-color, rgba(255,255,255,0.25));
+  border-radius: 999px;
+
+  background: rgba(255,255,255,0.1);
+  /* color: white; */
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+  user-select: none;
+
+  transition: 0.2s ease;
+}
+
+.type-check input {
+  display: none;
+}
+
+.type-check:hover {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.16);
+}
+
+.type-check.active {
+  background: var(--type-color, #666);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+.none-type {
+  border-color: rgba(255,255,255,0.35);
+}
+
+.none-type.active {
+  background: #444;
+}

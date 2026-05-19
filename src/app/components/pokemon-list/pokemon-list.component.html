@@ -4,12 +4,57 @@ HOW TO START SERVER
 node server.js
 
 /pokedex-frontend     ← Angular app 
-ng serve
+ng serve [NOT ANYMORE]
 npm start
 -->
+<div class="filter-bar"> <!-- Filter Bar -->
+  <input
+    type="text"
+    placeholder="Search by name or number..."
+    [(ngModel)]="searchTerm"
+    (input)="applyFilters()"
+  />
 
+  <div class="type-checkbox-filter">
+    <span class="filter-label">Types</span>
+
+    <label
+      class="type-check none-type"
+      [class.active]="isTypeSelected('None')">
+      <input
+        #noneBox
+        type="checkbox"
+        [checked]="isTypeSelected('None')"
+        (change)="toggleTypeFilter('None', noneBox.checked)"
+      />
+      None
+    </label>
+
+    <label
+      *ngFor="let type of typeOptions"
+      class="type-check"
+      [class.active]="isTypeSelected(type)"
+      [style.--type-color]="getTypeColor(type)">
+      <input
+        #typeBox
+        type="checkbox"
+        [checked]="isTypeSelected(type)"
+        (change)="toggleTypeFilter(type, typeBox.checked)"
+      />
+      {{ type }}
+    </label>
+  </div>
+
+  <select [(ngModel)]="selectedGeneration" (change)="applyFilters()">
+    <option *ngFor="let gen of generationOptions" [value]="gen">
+      {{ gen === 'All' ? 'All Generations' : 'Gen ' + gen }}
+    </option>
+  </select>
+
+  <button (click)="clearFilters()">Clear</button>
+</div>
 <div class="grid">
-  <div *ngFor="let poke of pokemons" 
+  <div *ngFor="let poke of filteredPokemons" 
   class="card" 
   (click)="openPopup(poke)" 
   [style.borderColor]="getTypeColor(poke.types[0])"

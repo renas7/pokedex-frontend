@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Pokemon } from '../../models/pokemon.model';
 import { PokemonService } from '../../services/pokemon.service';
 import { Router, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-pokemon-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './pokemon-list.component.html',
   styleUrls: ['./pokemon-list.component.css']
 })
@@ -22,6 +23,7 @@ export class PokemonListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.pokemonService.getAllPokemon().subscribe((data: Pokemon[]) => {
       this.pokemons = data;
+      this.filteredPokemons = data;
 
       // Restore scroll after data loads
       const saved = sessionStorage.getItem('scrollPosition');
@@ -125,6 +127,7 @@ export class PokemonListComponent implements OnInit, OnDestroy {
     if (normalized === 'nidoran-m') return 'Nidoran';
     if (normalized === 'farfetchd') return 'Farfetch\'d';
     if (normalized === 'mr-mime') return 'Mr. Mime';
+    if (normalized === 'ho-oh') return 'Ho-Oh';
 
     return name;
   }
@@ -132,6 +135,78 @@ export class PokemonListComponent implements OnInit, OnDestroy {
   goToDetail(id: number) {
     sessionStorage.setItem('scrollPosition', String(window.scrollY));
     this.router.navigate(['/pokemon', id]);
+  }
+
+  //Seach and filter
+  filteredPokemons: Pokemon[] = [];
+
+  searchTerm = '';
+  selectedTypes: string[] = [];
+  selectedGeneration = 'All';
+
+  typeOptions: string[] = [
+    // 'Any', 'None',
+    'Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice',
+    'Fighting', 'Poison', 'Ground', 'Flying', 'Psychic', 'Bug',
+    'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy'
+  ];
+
+  toggleTypeFilter(type: string, checked: boolean): void {
+    if (checked) {
+      if (!this.selectedTypes.includes(type)) {
+        this.selectedTypes.push(type);
+      }
+    } else {
+      this.selectedTypes = this.selectedTypes.filter(t => t !== type);
+    }
+
+    this.applyFilters();
+  }
+
+  isTypeSelected(type: string): boolean {
+    return this.selectedTypes.includes(type);
+  }
+
+  generationOptions: string[] = [
+    'All', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+  ];
+
+  applyFilters(): void {
+    const term = this.searchTerm.toLowerCase().trim();
+
+    this.filteredPokemons = this.pokemons.filter(poke => {
+      const matchesSearch =
+        poke.name.toLowerCase().includes(term) ||
+        String(poke.number).includes(term);
+
+      const pokeTypes = poke.types || [];
+
+      const wantsNoSecondary = this.selectedTypes.includes('None');
+      const selectedRealTypes = this.selectedTypes.filter(type => type !== 'None');
+
+      const matchesSelectedTypes =
+        selectedRealTypes.length === 0 ||
+        selectedRealTypes.every(type => pokeTypes.includes(type));
+
+      const matchesNoSecondary =
+        !wantsNoSecondary || pokeTypes.length === 1;
+
+      const matchesType =
+        matchesSelectedTypes && matchesNoSecondary;
+
+      const matchesGeneration =
+        this.selectedGeneration === 'All' ||
+        String(poke.generation) === this.selectedGeneration;
+
+      return matchesSearch && matchesType && matchesGeneration;
+    });
+  }
+
+  clearFilters(): void {
+    this.searchTerm = '';
+    this.selectedTypes = [];
+    this.selectedGeneration = 'All';
+    this.filteredPokemons = this.pokemons;
   }
 
   getTypeColor(type: string): string {
