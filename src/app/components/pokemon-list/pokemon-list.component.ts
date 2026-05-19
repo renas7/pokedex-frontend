@@ -143,17 +143,40 @@ export class PokemonListComponent implements OnInit, OnDestroy {
   searchTerm = '';
   selectedTypes: string[] = [];
   selectedGeneration = 'All';
+  isTypeDropdownOpen = false;
 
   typeOptions: string[] = [
-    // 'Any', 'None',
+    // 'Any', 
+    'None',
     'Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice',
     'Fighting', 'Poison', 'Ground', 'Flying', 'Psychic', 'Bug',
     'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy'
   ];
 
+  toggleTypeDropdown(): void {
+    this.isTypeDropdownOpen = !this.isTypeDropdownOpen;
+  }
+
+  isTypeSelected(type: string): boolean {
+    return this.selectedTypes.includes(type);
+  }
+
+  getSelectedTypeLabel(): string {
+    if (this.selectedTypes.length === 0) {
+      return 'Any Type';
+    }
+
+    return this.selectedTypes.join(' + ');
+  }
+
   toggleTypeFilter(type: string, checked: boolean): void {
     if (checked) {
       if (!this.selectedTypes.includes(type)) {
+        if (this.selectedTypes.length >= 2) {
+          // removes the last selected type before adding the new one
+          this.selectedTypes.splice(this.selectedTypes.length - 1, 1);
+        }
+
         this.selectedTypes.push(type);
       }
     } else {
@@ -161,10 +184,6 @@ export class PokemonListComponent implements OnInit, OnDestroy {
     }
 
     this.applyFilters();
-  }
-
-  isTypeSelected(type: string): boolean {
-    return this.selectedTypes.includes(type);
   }
 
   generationOptions: string[] = [
@@ -207,6 +226,11 @@ export class PokemonListComponent implements OnInit, OnDestroy {
     this.selectedTypes = [];
     this.selectedGeneration = 'All';
     this.filteredPokemons = this.pokemons;
+  }
+
+  @HostListener('document:click')
+  closeTypeDropdownOnOutsideClick(): void {
+    this.isTypeDropdownOpen = false;
   }
 
   getTypeColor(type: string): string {

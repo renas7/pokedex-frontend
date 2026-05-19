@@ -15,34 +15,32 @@ npm start
     (input)="applyFilters()"
   />
 
-  <div class="type-checkbox-filter">
-    <span class="filter-label">Types</span>
+  <div class="type-dropdown" (click)="$event.stopPropagation()">
+    <button
+      type="button"
+      class="type-dropdown-toggle"
+      (click)="toggleTypeDropdown()">
+      <span>{{ getSelectedTypeLabel() }}</span>
+      <span class="dropdown-arrow">▾</span>
+    </button>
 
-    <label
-      class="type-check none-type"
-      [class.active]="isTypeSelected('None')">
-      <input
-        #noneBox
-        type="checkbox"
-        [checked]="isTypeSelected('None')"
-        (change)="toggleTypeFilter('None', noneBox.checked)"
-      />
-      None
-    </label>
+    <div class="type-dropdown-menu" *ngIf="isTypeDropdownOpen">
+      <label
+        *ngFor="let type of typeOptions"
+        class="type-dropdown-option"
+        [class.active]="isTypeSelected(type)"
+        [style.--type-color]="type === 'None' ? '#555' : getTypeColor(type)">
+        
+        <input
+          #typeBox
+          type="checkbox"
+          [checked]="isTypeSelected(type)"
+          (change)="toggleTypeFilter(type, typeBox.checked)"
+        />
 
-    <label
-      *ngFor="let type of typeOptions"
-      class="type-check"
-      [class.active]="isTypeSelected(type)"
-      [style.--type-color]="getTypeColor(type)">
-      <input
-        #typeBox
-        type="checkbox"
-        [checked]="isTypeSelected(type)"
-        (change)="toggleTypeFilter(type, typeBox.checked)"
-      />
-      {{ type }}
-    </label>
+        <span>{{ type }}</span>
+      </label>
+    </div>
   </div>
 
   <select [(ngModel)]="selectedGeneration" (change)="applyFilters()">
